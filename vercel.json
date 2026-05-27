@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "buildCommand": "vite build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/api/gemini/(.*)", "destination": "/api/gemini?route=$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
