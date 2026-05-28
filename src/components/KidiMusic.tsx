@@ -75,7 +75,7 @@ const DEFAULT_TRACKS: Track[] = [
 interface KidiMusicProps {
   session: AccountSession;
   onUpdateSession: (updated: AccountSession) => void;
-  language: "fr" | "en" | "es" | "ja";
+  language: "fr" | "en";
 }
 
 export default function KidiMusic({ session, onUpdateSession, language }: KidiMusicProps) {

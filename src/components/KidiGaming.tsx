@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Sparkles, Play, Award, Zap, ChevronRight, Lock, CheckCircle, Smartphone, Flame, RefreshCcw, Command, Cpu, ArrowRight, Code, FileCode, Check, Star, ShieldAlert, CreditCard, Wallet, Coins, RefreshCw, Layers, Folder, Plus, Trash2, Calendar, Save, Hourglass, Edit3, Search } from "lucide-react";
 import { AccountSession } from "./AccountAuth";
+import ConfirmModal from "./ConfirmModal";
 
 interface GameModel {
   id: string;
@@ -28,12 +29,13 @@ export interface SavedProject {
 interface KidiGamingProps {
   session: AccountSession;
   onUpdateSession: (updated: AccountSession) => void;
-  language: "fr" | "en" | "es" | "ja";
+  language: "fr" | "en";
 }
 
 export default function KidiGaming({ session, onUpdateSession, language }: KidiGamingProps) {
   const [activeGameCategory, setActiveGameCategory] = useState<"chess" | "memory" | "ai-builder" | "kidi-educatif">("ai-builder");
   const [coinsReward, setCoinsReward] = useState<string>("");
+  const [confirmModal, setConfirmModal] = useState<{ isOpen: boolean; projectId: string | null }>({ isOpen: false, projectId: null });
   const [challengeSearchQuery, setChallengeSearchQuery] = useState<string>("");
 
   // Game 1: Cosmic Chess puzzle states
@@ -883,15 +885,21 @@ export default function KidiGaming({ session, onUpdateSession, language }: KidiG
         : "⚠️ Impossible: keep at least one active project!", "warning");
       return;
     }
+    setConfirmModal({ isOpen: true, projectId: id });
+  };
+
+  const confirmDeleteProject = () => {
+    const id = confirmModal.projectId;
+    if (!id) return;
     const filtered = savedProjects.filter(p => p.id !== id);
     setSavedProjects(filtered);
     try {
       localStorage.setItem("kidi_saved_projects", JSON.stringify(filtered));
     } catch {}
-    
     if (activeProjectId === id) {
       handleLoadProject(filtered[0]);
     }
+    setConfirmModal({ isOpen: false, projectId: null });
   };
 
   // Simulated countdown ticking til tomorrow
@@ -3295,6 +3303,18 @@ export class CustomGameEngine extends PhysicsEngine {
           </div>
         </div>
       )}
+
+      {/* Confirm Delete Modal */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title="Supprimer ce projet ?"
+        message="Cette action est irréversible. Ton projet sera définitivement supprimé de l'espace de travail."
+        confirmLabel="Supprimer"
+        cancelLabel="Annuler"
+        variant="danger"
+        onConfirm={confirmDeleteProject}
+        onCancel={() => setConfirmModal({ isOpen: false, projectId: null })}
+      />
     </div>
   );
 }

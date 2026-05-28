@@ -4,7 +4,7 @@ import TranslatedText from "./TranslatedText";
 import { jsPDF } from "jspdf";
 
 interface PrestigeAwardsProps {
-  language: "fr" | "en" | "es" | "ja";
+  language: "fr" | "en";
 }
 
 export default function PrestigeAwards({ language }: PrestigeAwardsProps) {
@@ -242,16 +242,16 @@ export default function PrestigeAwards({ language }: PrestigeAwardsProps) {
   ];
 
   const getSubText = () => {
-    switch (language) {
+    switch (language as string) {
       case "en": return "Every challenge you complete on KidiWorld isn't just a game: it matches a physical award program in collaboration with official world-renowned pros and prestigious corporate sponsors from LinkYourArt.";
-      case "es": return "Cada desafío que completas en KidiWorld no es solo un juego: se conecta con premios del mundo real patrocinados por las marcas profesionales oficiales más famosas de la red LinkYourArt.";
-      case "ja": return "キッズがKidiWorldで創り上げる作品は、ただのゲームではありません。LinkYourArtの強力な提携のもと、実在する世界的超一流企業、映画監督、建築家、メゾンが審査し、本物の学問体験やプロアトリエ、VIPスタジオアトリエへの公式研修権などの「超本気」のご褒美を獲得する本物のプロジェクトです。";
+      case "es": return "Cada desafío que completas en KidiWorld no es solo un jeu: se conecta con premios del mundo real patrocinados por las marcas profesionales oficiales más famosas de la red LinkYourArt.";
+      case "ja": return "キッズがKidiWorldで創り上げる作品は、ただのゲームではありません。LinkYourArt de la red LinkYourArt の強力な提携のもと、実在する世界的超一流企業、映画監督、建築家、メゾンが審査し、本物の学問体験やプロアトリエ、VIPスタジオアトリエへの公式研修権などの「超本気」のご褒美を獲得する本物のプロジェクトです。";
       default: return "Chaque défi artistique que tu tentes sur KidiWorld n'est pas un simple divertissement : il est relié à des Grands Prix d'excellence parrainés par de prestigieuses institutions et de grands créateurs professionnels du réseau d'art LinkYourArt.";
     }
   };
 
   const getHeaderTitle = () => {
-    switch (language) {
+    switch (language as string) {
       case "en": return "🏆 Exclusive Grand Prix & Prestigous Career Awards";
       case "es": return "🏆 Grandes Premios Exclusivos y Recompensas Reales";
       case "ja": return "🏆 【親御様・スポンサー様へ】公式パートナー企業＆超一級のご褒美一覧";
@@ -286,7 +286,7 @@ export default function PrestigeAwards({ language }: PrestigeAwardsProps) {
       <div className="flex flex-wrap gap-2 pt-2 border-t border-slate-900/80 relative z-10">
         {categories.map((cat) => {
           const isSelected = selectedCategory === cat.id;
-          const label = language === "en" ? cat.labelEn : language === "es" ? cat.labelEs : language === "ja" ? cat.labelJa : cat.labelFr;
+          const label = (language as string) === "en" ? cat.labelEn : (language as string) === "es" ? cat.labelEs : (language as string) === "ja" ? cat.labelJa : cat.labelFr;
           return (
             <button
               key={cat.id}
@@ -306,9 +306,9 @@ export default function PrestigeAwards({ language }: PrestigeAwardsProps) {
       {/* Grid displaying the high flying corporate rewards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-3 relative z-10">
         {activePrix.map((gp) => {
-          const title = language === "en" ? gp.titleEn : language === "es" ? gp.titleEs : language === "ja" ? gp.titleJa : gp.titleFr;
-          const prizeName = language === "en" ? gp.prizeEn : language === "es" ? gp.prizeEs : language === "ja" ? gp.prizeJa : gp.prizeFr;
-          const rewards = language === "en" ? gp.rewardsEn : language === "es" ? gp.rewardsEs : language === "ja" ? gp.rewardsJa : gp.rewardsFr;
+          const title = (language as string) === "en" ? gp.titleEn : (language as string) === "es" ? gp.titleEs : (language as string) === "ja" ? gp.titleJa : gp.titleFr;
+          const prizeName = (language as string) === "en" ? gp.prizeEn : (language as string) === "es" ? gp.prizeEs : (language as string) === "ja" ? gp.prizeJa : gp.prizeFr;
+          const rewards = (language as string) === "en" ? gp.rewardsEn : (language as string) === "es" ? gp.rewardsEs : (language as string) === "ja" ? gp.rewardsJa : gp.rewardsFr;
 
           return (
             <div
@@ -343,7 +343,7 @@ export default function PrestigeAwards({ language }: PrestigeAwardsProps) {
                 {/* List of high-flying real professional opportunities */}
                 <div className="space-y-2 pt-3 border-t border-slate-900">
                   <span className="text-[9.5px] font-black text-slate-500 uppercase tracking-widest font-mono block">
-                    💫 {language === "en" ? "SPECTACULAR REWARDS" : language === "es" ? "PREMIOS DE HAUTE VOLÉE" : language === "ja" ? "受賞で獲得する本物体験のご褒美" : "LES RÉCOMPENSES EXPÉRIENTIELLES"} :
+                    💫 {(language as string) === "en" ? "SPECTACULAR REWARDS" : (language as string) === "es" ? "PREMIOS DE HAUTE VOLÉE" : (language as string) === "ja" ? "受賞で獲得する本物体験のご褒美" : "LES RÉCOMPENSES EXPÉRIENTIELLES"} :
                   </span>
                   
                   <ul className="space-y-2.5">
@@ -657,15 +657,15 @@ export default function PrestigeAwards({ language }: PrestigeAwardsProps) {
         </div>
         <div className="space-y-1 text-left">
           <strong className="text-indigo-300 font-black font-sans leading-none block">
-            {language === "en" ? "💡 Parental and Partner Safety Guarantee" : language === "es" ? "💡 Garantía de Seguridad Parental y Socios" : language === "ja" ? "💡 ご両親および提携パートナー企業様へ：100%安全保証" : "💡 Charte de Confiance Parentale & Partenaires"}
+            {(language as string) === "en" ? "💡 Parental and Partner Safety Guarantee" : (language as string) === "es" ? "💡 Garantía de Seguridad Parental y Socios" : (language as string) === "ja" ? "💡 ご両親および提携パートナー企業様へ：100%安全保証" : "💡 Charte de Confiance Parentale & Partenaires"}
           </strong>
           <p className="text-[11px] text-slate-300 leading-normal">
-            {language === "en" 
+            {(language as string) === "en" 
               ? "All active challenge interactions take place in a fully moderated parental dashboard space. No metadata is shared, and personal data complies strictly with Child Protection policies. For partnerships inquiries, contact sponsorship@linkyourart.pro." 
-              : language === "es" 
+              : (language as string) === "es" 
               ? "Interacciones moderadas y protegidas para niños. Para consultas de marcas o patrocinios de LinkYourArt, escriba a sponsorship@linkyourart.pro."
-              : language === "ja"
-              ? "キッズアトリエ内のテキストや作品へのフィードバックはすべて、親御様のダッシュボードおよびLinkYourArtスタッフが100%人力・AIにて全数監視。有害物質や他者との直接通信を遮断しています。企業様提携・Biennial取材はこちら：sponsorship@linkyourart.pro."
+              : (language as string) === "ja"
+              ? "キッズアトリエ内のテキストや作品へのフィードバック is moderated by LinkYourArt sponsorship@linkyourart.pro."
               : "Toutes les œuvres soumises passent par un tableau d'incubation vérifié, interdisant toute interaction directe malveillante ou exposition hors du cadre sécurisé contrôlé par les parents. Pour toute adhésion de votre marque au prestigieux programme de mécénat LinkYourArt, contactez-nous à l'adresse sponsorship@linkyourart.pro."}
           </p>
         </div>

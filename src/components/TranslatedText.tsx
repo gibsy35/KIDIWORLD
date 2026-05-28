@@ -3,7 +3,7 @@ import { Languages } from "lucide-react";
 
 interface TranslatedTextProps {
   text: string;
-  targetLang: "fr" | "en" | "es" | "ja";
+  targetLang: "fr" | "en";
   className?: string;
   isParagraph?: boolean;
 }
@@ -221,6 +221,31 @@ const STATIC_DICTIONARY: Record<string, Record<string, string>> = {
     en: "The final message from the jury: compose, design, and create with all your heart!",
     es: "El mensaje final del prestigioso jurado: ¡crea con todo tu talento!",
     ja: "審査専門委員会からのラストメッセージ：「キミの持てるすべての創造力、情熱、技術、感性を解き放とう！」"
+  },
+  "designers de demain, redéfinissez les codes vestimentaires galactiques ! imaginez et dessinez la combinaison spatiale d'exploration pour l'équipage du polaris. alliez coupes fluides, textiles bioluminescents et fibres de quartz. à la clé : le prestigieux prix du design junior impliquant une immersion exceptionnelle de 3 jours au sein des ateliers de couture de nos créateurs partenaires chanel, et la modélisation 3d professionnelle de votre modèle par un infographiste de mode sur grand écran !": {
+    en: "Designers of tomorrow, redefine galactic dress codes! Imagine and draw the space exploration suit for the Polaris crew. Combine flowing cuts, bioluminescent textiles, and quartz fibers. The prize: the prestigious JUNIOR DESIGN AWARD involving an exceptional 3-day immersion within the couture workshops of partner Chanel, and professional 3D modeling of your design by a fashion graphic designer on a big screen!",
+    es: "¡Diseñadores del mañana, rediseñen los códigos de vestimenta galácticos! Diseñen el traje de exploración espacial del Polaris combinando textiles bioluminiscentes y fibras de cuarzo. El premio: una inmersión de 3 días en los talleres de costura de Chanel y modelado profesional en 3D.",
+    ja: "未来のデザイナーたちへ、宇宙のドレスコードを再定義しましょう！Polaris号のクルーが着用する、流線型の美しさと発光素材、クォーツ繊維を組み合わせた宇宙飛行服をデザインしてください。受賞者にはChanelのクチュール工房での特別な3日間実地体験と、専門家による3Dデジタルモデル化が贈られます。"
+  },
+  "mariez des harmonies célestes et des rythmes chiptunes entraînants pour écrire et composer le thème sonore officiel d'entrée du grand cachalot stellaire dans le port galactique ! le vainqueur de ce concours de haute volée remportera le grand prix soundscapes de la création musicale : son morceau sera mis en musique, arrangé et enregistré en direct par de réels musiciens professionnels de l'orchestre de radio france, suivie d'une initiation magique d'un jour au sein de leurs studios mythiques !": {
+    en: "Blend celestial harmonies and catchy chiptune beats to write and compose the official entrance theme of the great Stellar Sperm Whale into the galactic port! The winner of this high-profile contest will win the SOUNDSCAPES GRAND PRIZE FOR MUSIC CREATION: their piece will be scored, arranged, and recorded live by real professional musicians from the Radio France Philharmonic Orchestra, followed by a magical one-day initiation inside their mythical studios!",
+    es: "¡Fusione armonías celestiales y ritmos chiptune alegres para componer el himno oficial de entrada de la ballena espacial! El ganador obtendrá la grabación en vivo de su obra por la prestigiosa Orquesta Sinfónica de Radio France.",
+    ja: "天上のハーモニーと楽しい電子ビートを融合させ、宇宙マッコウクジラが銀河港に現れたときの公式ファンファーレ＆テーマ曲を作曲してください！最優秀賞には、フランス国立放送管弦楽団のプロの楽団員が生アレンジ・生演奏レコーディングを行い、神聖なスタジオ見学ツアーに招待されます。"
+  },
+  "futurs visionnaires de la construction, bâtissez le futur ! dessinez ou décrivez les plans de la première cité d'habitation écologique auto-suffisante flottant en au pesant... flottant en apesanteur. mariez mégastructures d'acier recyclé, dômes de biosphère végétale et captation solaire active. le grand gagnant verra ses croquis modélisés et imprimés en 3d à grande échelle pour être exposés, doublés d'une session de critique constructive de 2 heures par le grand architecte jean nouvel et ses associés !": {
+    en: "Future visionaries of construction, build the future! Draw or describe the blueprints of the first self-sufficient ecological housing city floating in weightlessness. Combine recycled steel megastructures, plant biosphere domes, and active solar capture systems. The grand winner will have their sketches modeled and printed in 3D on a large scale for exhibition, along with a 2-hour constructive review session with the great architect Jean Nouvel and his associates!",
+    es: "¡Arquitectos del futuro, construyan el mañana! Diseñen la primera ciudad ecológica flotante en gravedad cero. El ganador obtendrá un modelado e impresión física en 3D del diseño para exposición y una sesión de mentoría de 2 horas con Jean Nouvel.",
+    ja: "未来の建築家たちへ、新しい時代の都市をデザインしてください！宇宙空間に浮かぶ、自己循環型のエコ住居都市の設計図を描きましょう。リサイクル鋼材の主骨格、豊かな植物が茂るバイオドーム、高効率太陽電池を配置します。最優秀賞のスケールモデルは大型3Dプリンターで造形・展示され、巨匠ジャン・ヌーヴェルによる2時間の設計指導セッションが贈られます。"
+  },
+  "futurs visionnaires de la construction, bâtissez le futur ! dessinez ou décrivez les plans de la première cité d'habitation écologique auto-suffisante flottant en apesanteur. mariez mégastructures d'acier recyclé, dômes de biosphère végétale et captation solaire active. le grand gagnant verra ses croquis modélisés et imprimés en 3d à grande échelle pour être exposés, doublés d'une session de critique constructive de 2 heures par le grand architecte jean nouvel et ses associés !": {
+    en: "Future visionaries of construction, build the future! Draw or describe the blueprints of the first self-sufficient ecological housing city floating in weightlessness. Combine recycled steel megastructures, plant biosphere domes, and active solar capture systems. The grand winner will have their sketches modeled and printed in 3D on a large scale for exhibition, along with a 2-hour constructive review session with the great architect Jean Nouvel and his associates!",
+    es: "¡Arquitectos del futuro, construyan el mañana! Diseñen la primera ciudad ecológica flotante en gravedad cero. El ganador obtendrá un modelado e impresión física en 3D del diseño para exposición y una sesión de mentoría de 2 horas con Jean Nouvel.",
+    ja: "未来の建築家たちへ、新しい時代の都市をデザインしてください！宇宙空間に浮かぶ、自己循環型のエコ住居都市の設計図を描きましょう。リサイクル鋼材の主骨格、豊かな植物が茂るバイオドーム、高効率太陽電池を配置します。最優秀賞のスケールモデルは大型3Dプリンターで造形・展示され、巨匠ジャン・ヌーヴェルによる2時間の設計指導セッションが贈られます。"
+  },
+  "bienvenue aux plus jeunes explorateurs de l'univers ! pour ce challenge créatif amusant, imagine un petit animal tout doux ou une méduse souriante qui vole à bord du polaris. utilise notre tableau de dessin avec des couleurs pastel et des étoiles lumineuses pour exprimer ton génie. relève le défi et obtiens ton diplôme officiel de jeune explorateur de l'art !": {
+    en: "Welcome to the youngest explorers of the universe! For this fun creative challenge, imagine a sweet little animal or a smiling jellyfish flying aboard the Polaris. Use our drawing board with pastel colors and glowing stars to express your genius. Take up the challenge and get your Official Young Art Explorer Diploma!",
+    es: "¡Bienvenidos a los exploradores más jóvenes del universo! Imagina una criatura tierna o una medusa feliz volando a bordo del Polaris. Dibuja usando tonos pastel y estrellas brillantes y llévate tu Diploma Oficial de Explorador del Arte.",
+    ja: "ちいさな宇宙の探険家たち、ようこそ！このお絵描きチャレンジでは、Polaris号に乗って宇宙旅行する、ふわふわした動物やにっこり笑ったクラゲの絵をクリエイトしてみましょう。パステルカラーや星のペンを使いましょう。クリアすると「お絵描き宇宙探検証書」が授与されます！"
   },
 
   // --- Nests (Sub-Challenges Tasks) ---

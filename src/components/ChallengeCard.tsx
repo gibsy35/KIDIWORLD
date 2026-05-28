@@ -7,7 +7,7 @@ export interface ChallengeCardProps {
   key?: React.Key;
   challenge: Challenge;
   isActive: boolean;
-  language: "fr" | "en" | "es" | "ja";
+  language: "fr" | "en";
   onSelect: (challengeId: string) => void;
 }
 
@@ -27,10 +27,10 @@ export default function ChallengeCard({
   return (
     <div
       id={`challenge-card-${challenge.id}`}
-      className={`group border rounded-[2rem] p-6 text-left flex flex-col justify-between h-[360px] transition-all duration-300 relative overflow-hidden ${
+      className={`group border rounded-[2rem] p-6 text-left flex flex-col justify-between h-[360px] transition-all duration-300 relative overflow-hidden cursor-pointer ${
         isActive
           ? "bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 border-amber-500 shadow-2xl shadow-amber-500/15 ring-2 ring-amber-500/30 scale-[1.02]"
-          : "bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900/40 border-slate-900/80 hover:border-slate-700 hover:shadow-[0_12px_40px_rgba(245,158,11,0.06)]"
+          : "bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900/40 border-slate-900/80 hover:border-amber-500/40 hover:shadow-[0_16px_48px_rgba(245,158,11,0.12)] hover:scale-[1.015] hover:-translate-y-1"
       }`}
     >
       {/* Decorative Glow background accent */}
@@ -60,6 +60,8 @@ export default function ChallengeCard({
                : challenge.category === "animation" ? "👾 KIDI 3D & JEUX"
                : challenge.category === "photography" ? "📸 KIDI PHOTOGRAPHY"
                : challenge.category === "architecture" ? "🏛️ KIDI ARCHITECTURE"
+               : challenge.category === "tvseries" ? "📺 TV SÉRIES"
+               : challenge.category === "podcast" ? "🎙️ PODCAST"
                : challenge.category}
             </span>
           </div>

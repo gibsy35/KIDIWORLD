@@ -497,7 +497,7 @@ const PARTNERS_DATA: Partner[] = [
 ];
 
 interface PartnersSectionProps {
-  language: "fr" | "en" | "es" | "ja";
+  language: "fr" | "en";
 }
 
 export default function PartnersSection({ language }: PartnersSectionProps) {

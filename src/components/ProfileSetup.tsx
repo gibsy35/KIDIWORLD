@@ -12,7 +12,7 @@ export default function ProfileSetup({ profile, onChangeProfile, starsCount }: P
   const [parentEmailInput, setParentEmailInput] = useState(profile.parentEmail);
   const [childNameInput, setChildNameInput] = useState(profile.childName);
   const [childAgeInput, setChildAgeInput] = useState(profile.childAge);
-  const [selectedLang, setSelectedLang] = useState<"fr" | "en" | "es" | "ja">(profile.language);
+  const [selectedLang, setSelectedLang] = useState<"fr" | "en">(profile.language);
   const [timeLimit, setTimeLimit] = useState<number>(profile.screenTimeLimitMinutes);
   const [parentApproved, setParentApproved] = useState<boolean>(profile.parentApproved);
   const [selectedCats, setSelectedCats] = useState<string[]>(profile.preferredCategories);
@@ -46,8 +46,6 @@ export default function ProfileSetup({ profile, onChangeProfile, starsCount }: P
   const languagesAvailable = [
     { code: "fr", name: "Français 🇫🇷" },
     { code: "en", name: "English 🇬🇧" },
-    { code: "es", name: "Español 🇪🇸" },
-    { code: "ja", name: "日本語 🇯🇵" },
   ];
 
   const handleToggleCategory = (catId: string) => {
@@ -174,7 +172,7 @@ export default function ProfileSetup({ profile, onChangeProfile, starsCount }: P
                 ))}
               </div>
               <p className="text-[9px] text-slate-500 leading-normal">
-                Notre traducteur IA automatique traduira instantanément tous les défis de la Terre et les commentaires du jury en {selectedLang === "en" ? "Anglais" : selectedLang === "es" ? "Espagnol" : selectedLang === "ja" ? "Japonais" : "Français"}.
+                Notre traducteur IA automatique traduira instantanément tous les défis de la Terre et les commentaires du jury en {selectedLang === "en" ? "Anglais" : "Français"}.
               </p>
             </div>
           </div>

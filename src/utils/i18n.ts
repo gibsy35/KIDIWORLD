@@ -1,6 +1,6 @@
-type Language = "fr" | "en" | "es" | "ja";
+type Language = "fr" | "en";
 
-const DICTIONARY: Record<string, Record<Language, string>> = {
+const DICTIONARY: Record<string, Record<string, string>> = {
   // App navigation & categories
   "nav.explorer": {
     fr: "🚀 Explorateur",
@@ -49,6 +49,12 @@ const DICTIONARY: Record<string, Record<Language, string>> = {
     en: "🤝 Partners",
     es: "🤝 Socios",
     ja: "🤝 パートナー"
+  },
+  "nav.about": {
+    fr: "📖 Qui sommes-nous ?",
+    en: "📖 About Us",
+    es: "📖 ¿Quiénes Somos?",
+    ja: "📖 私たちについて"
   },
 
   // General buttons

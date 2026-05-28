@@ -13,7 +13,7 @@ export interface AccountSession {
 interface AccountAuthProps {
   session: AccountSession;
   onUpdateSession: (updated: AccountSession) => void;
-  language: "fr" | "en" | "es" | "ja";
+  language: "fr" | "en";
 }
 
 const AVATARS = [

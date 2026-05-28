@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Award, HelpCircle, Shield, Languages, Coins } from 'lucide-react';
+import { Award, HelpCircle, Shield, Languages, Coins } from 'lucide-react';
 
 interface HeaderProps {
   starsCount: number;
@@ -35,15 +35,22 @@ export default function Header({
   return (
     <header className="bg-slate-950/80 backdrop-blur-md border-b border-slate-900 sticky top-0 z-50 px-6 py-4">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-        {/* Branding Logo */}
+        {/* Branding Logo — KW monogram */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 via-orange-500 to-pink-500 flex items-center justify-center shadow-lg shadow-orange-500/20">
-            <Sparkles className="w-5.5 h-5.5 text-slate-950 stroke-[2.5]" />
+          <div className="relative w-11 h-11 flex-shrink-0">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-pink-600 shadow-lg shadow-orange-500/30 flex items-center justify-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/5 rounded-2xl" />
+              <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-pink-500/30 rounded-full blur-md" />
+              <span className="relative z-10 text-slate-950 font-black text-[15px] leading-none select-none" style={{ letterSpacing: '-0.05em' }}>
+                KW
+              </span>
+            </div>
+            <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-amber-300 rounded-full border-2 border-slate-950 animate-pulse" />
           </div>
           <div className="text-left">
             <div className="flex items-center gap-2">
-              <span className="text-xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-100 to-slate-400 font-sans">
-                KIDIWORLD
+              <span className="text-xl font-black tracking-wide font-sans">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-400 to-pink-400">KIDI</span><span className="text-white">WORLD</span>
               </span>
               <span className="text-[9px] bg-amber-500/10 text-amber-400 font-bold px-1.5 py-0.5 rounded border border-amber-500/10">
                 4-18 ANS SAFE
@@ -55,10 +62,10 @@ export default function Header({
           </div>
         </div>
 
-        {/* Dynamic Nav Controls View Toggle & Profile setup */}
+        {/* Dynamic Nav Controls */}
         <div className="flex flex-wrap items-center gap-3">
           
-          {/* Global Real-time Language Selector Dropdown - Extremely polished */}
+          {/* Language Selector */}
           <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-800/80 px-3 py-1.5 rounded-xl text-[10px] font-mono font-bold text-slate-300 shadow-inner">
             <Languages className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
             <span className="text-slate-500 hidden sm:inline">LANGUE :</span>
@@ -75,7 +82,7 @@ export default function Header({
             </select>
           </div>
 
-          {/* High-Visibility Interactive Tutorial Trigger Button with Pulsing Dot */}
+          {/* Tutorial Button */}
           <button
             onClick={onOpenTutorial}
             className="group relative flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-indigo-600 hover:from-indigo-500 hover:to-indigo-400 text-white text-xs font-extrabold transition-all duration-300 shadow-[0_0_15px_rgba(99,102,241,0.4)] hover:shadow-[0_0_22px_rgba(99,102,241,0.7)] cursor-pointer select-none active:scale-95 border border-indigo-400/30"
@@ -88,7 +95,7 @@ export default function Header({
             <span className="tracking-wide">Tutoriel Interactif 🚀</span>
           </button>
 
-          {/* Parental Setup Shortcut trigger button */}
+          {/* Parental Control */}
           <button
             onClick={onOpenProfile}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-bold transition shadow-sm ${
@@ -101,12 +108,12 @@ export default function Header({
             <span className="hidden sm:inline">Contrôle Parental</span>
           </button>
 
-          {/* Quick Info Badges: Age level */}
+          {/* Age Badge */}
           <div className="flex items-center gap-1.5 bg-slate-900 border border-slate-800/80 px-2.5 py-1.5 rounded-xl text-[10px] font-mono font-bold text-slate-400 shadow-inner">
             <span className="text-amber-500">{getAgeLabelBadge(profileAge)}</span>
           </div>
 
-          {/* User Score Stats Badge */}
+          {/* Stars */}
           <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 rounded-xl border border-slate-800/80 font-mono text-xs shadow-md">
             <Award className="w-3.5 h-3.5 text-amber-500" />
             <span className="text-slate-400">Étoiles :</span>

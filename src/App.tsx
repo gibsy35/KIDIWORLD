@@ -13,6 +13,9 @@ import KidiMusic from "./components/KidiMusic";
 import KidiGaming from "./components/KidiGaming";
 import PrestigeAwards from "./components/PrestigeAwards";
 import PartnersSection from "./components/PartnersSection";
+import AboutUsSection from "./components/AboutUsSection";
+import KidiStreamPlayer from "./components/KidiStreamPlayer";
+import confetti from "canvas-confetti";
 import { Challenge, Submission, Clue, UserProfile } from "./types";
 import { t } from "./utils/i18n";
 import { 
@@ -31,6 +34,7 @@ import {
   Star, 
   Award, 
   ChevronRight,
+  ChevronLeft,
   Filter,
   Globe,
   Lock,
@@ -345,6 +349,58 @@ const initialChallengesList: Challenge[] = [
         ]
       }
     ]
+  },
+  {
+    id: "tvseries-1",
+    title: "KIDI SÉRIES : Le Polaris — Pilote de Série",
+    subtitle: "Écris le pilote de la série d'animation SF parrainée par Netflix & Canal+",
+    sponsor: "Aurélie Saada — Scénariste & Showrunner @ Canal+ & LinkYourArt",
+    description: "Crée le premier épisode d'une série d'animation originale ! Développe tes personnages, écris les dialogues du pilote et imagine l'arc narratif de la saison. Le gagnant verra son pilote storyboardé par une équipe de pros et présenté aux équipes de développement de Canal+ Kids.",
+    category: "tvseries",
+    ageGroup: "12-15",
+    isDemo: false,
+    startDate: "2026-06-01",
+    endDate: "2026-10-31",
+    cluesDurationDays: 10,
+    currentSimulatedDay: 1,
+    maxDays: 10,
+    clues: [
+      { day: 1, title: "Le Showrunner", description: "Définis le concept de ta série en une phrase : genre, univers, cible.", type: "keyword", content: "concept série", isUnlocked: true },
+      { day: 2, title: "Le Pitch", description: "Présente tes 3 personnages principaux avec leur rôle dans l'équipage.", type: "text", content: "personnages", isUnlocked: false },
+      { day: 3, title: "Le Cold Open", description: "Écris l'accroche des 2 premières minutes de ton épisode.", type: "text", content: "cold open", isUnlocked: false },
+      { day: 4, title: "Le Conflit", description: "Quel est l'enjeu central de ton pilote ? Qu'est-ce qui est en danger ?", type: "keyword", content: "enjeu", isUnlocked: false },
+      { day: 5, title: "Le Cliffhanger", description: "Comment se termine ton épisode pour donner envie de voir la suite ?", type: "text", content: "cliffhanger", isUnlocked: false },
+    ],
+    nestedChallenges: [
+      { id: "nest-tv-1", title: "Générique d'Intro", category: "music", description: "Compose le thème musical d'ouverture de ta série (8 mesures).", reward: "Collaboration avec compositeur Canal+", status: "active" },
+      { id: "nest-tv-2", title: "Character Design", category: "design", description: "Dessine le design de ton personnage principal.", reward: "Critique par animateur Pixar France", status: "active" },
+    ],
+    submissions: []
+  },
+  {
+    id: "podcast-1",
+    title: "KIDI PODCAST : Voix du Cosmos",
+    subtitle: "Crée et enregistre un épisode de podcast sur l'exploration spatiale & la science",
+    sponsor: "Thomas Pesquet & l'équipe éditoriale de France Inter Jeunesse",
+    description: "Lance ton propre podcast scientifique ! Choisis un sujet fascinant lié à l'espace, la nature ou la technologie, écris ton script, et enregistre un épisode de 5 minutes. Les meilleurs épisodes seront diffusés sur la plateforme France Inter Jeunesse et bénéficieront d'un coaching vocal avec un journaliste radio pro.",
+    category: "podcast",
+    ageGroup: "12-18",
+    isDemo: false,
+    startDate: "2026-06-15",
+    endDate: "2026-11-30",
+    cluesDurationDays: 8,
+    currentSimulatedDay: 0,
+    maxDays: 8,
+    clues: [
+      { day: 1, title: "Le Sujet", description: "Choisis ton thème scientifique et formule ta question centrale.", type: "keyword", content: "thème podcast", isUnlocked: false },
+      { day: 2, title: "La Recherche", description: "Liste 5 faits surprenants sur ton sujet que peu de gens connaissent.", type: "text", content: "faits insolites", isUnlocked: false },
+      { day: 3, title: "Le Script", description: "Écris l'intro accrocheuse de ton épisode (30 secondes à l'oral).", type: "text", content: "intro podcast", isUnlocked: false },
+      { day: 4, title: "L'Invité Imaginaire", description: "Invente une interview avec un scientifique ou explorateur fictif.", type: "text", content: "interview", isUnlocked: false },
+    ],
+    nestedChallenges: [
+      { id: "nest-pod-1", title: "Jingle d'Ouverture", category: "music", description: "Compose un jingle de 10 secondes pour ton podcast.", reward: "Diffusion sur France Inter Jeunesse", status: "active" },
+    ],
+    submissions: []
   }
 ];
 
@@ -486,9 +542,10 @@ const INITIAL_LEADERBOARD = [
   { name: "Maya", age: 6, category: "design", stars: 98, coins: 250, badge: "Petit Coco Mode 🎨", avatar: "🧸 Bout-d-chou" },
   { name: "Timothée", age: 16, category: "architecture", stars: 110, coins: 290, badge: "Bâtisseur Sidéral 🏛️", avatar: "🪐 Globe Trotter" },
   { name: "Kenzo", age: 10, category: "animation", stars: 85, coins: 180, badge: "Gamer Bidouilleur 👾", avatar: "👾 Robot Rétro" },
-  { name: "Sacha", age: 15, category: "cinema", stars: 77, coins: 150, badge: "Novice Cinéaste 🎬", avatar: "🚀 Astro-Mousse" },
+  { name: "Sacha", age: 15, category: "tvseries", stars: 77, coins: 150, badge: "Showrunner Junior 📺", avatar: "🚀 Astro-Mousse" },
   { name: "Chloé", age: 8, category: "music", stars: 64, coins: 120, badge: "Joueuse Flûte 🎵", avatar: "👽 Petit Génie" },
-  { name: "Arthur", age: 17, category: "photography", stars: 55, coins: 90, badge: "Reporter Comète 🌟", avatar: "🌟 Star Hunter" }
+  { name: "Arthur", age: 17, category: "photography", stars: 55, coins: 90, badge: "Reporter Comète 🌟", avatar: "🌟 Star Hunter" },
+  { name: "Inès", age: 14, category: "podcast", stars: 48, coins: 80, badge: "Voix des Étoiles 🎙️", avatar: "🎙️ Micro Pro" }
 ];
 
 export default function App() {
@@ -605,7 +662,7 @@ export default function App() {
   const [isSubmittedSuccessfully, setIsSubmittedSuccessfully] = useState(false);
 
   // Filters for the Challenge Explorer
-  const [filterCategory, setFilterCategory] = useState<string>("all");
+  const [filterCategory, setFilterCategory] = useState<string[]>([]);
   const [filterAge, setFilterAge] = useState<string>("all");
   const [filterMode, setFilterMode] = useState<string>("all"); // "all", "real", "demo"
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -621,6 +678,38 @@ export default function App() {
     "ks-4": 84,
     "ks-5": 110,
   });
+
+  // Sidebar collapsible view states
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(() => {
+    return localStorage.getItem("kidiworld_sidebar_collapsed") === "true";
+  });
+
+  // Sound Synth Generator for Celebratory Moments
+  const playFestiveSound = () => {
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const now = ctx.currentTime;
+      // Beautiful harmonic ascending bright celebratory arpeggio for kids
+      const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, now + i * 0.08);
+        
+        gain.gain.setValueAtTime(0, now + i * 0.08);
+        gain.gain.linearRampToValueAtTime(0.2, now + i * 0.08 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.08 + 0.35);
+        
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.08);
+        osc.stop(now + i * 0.08 + 0.4);
+      });
+    } catch (e) {
+      console.warn("Web Audio API not supported/interrupted:", e);
+    }
+  };
 
   // Leaderboard filters
   const [leaderboardCategory, setLeaderboardCategory] = useState<string>("all");
@@ -706,6 +795,13 @@ export default function App() {
     }));
 
     setIsSubmittedSuccessfully(true);
+    // Celebrating with confetti and sound
+    confetti({
+      particleCount: 140,
+      spread: 85,
+      origin: { y: 0.65 }
+    });
+    playFestiveSound();
     setTimeout(() => setIsSubmittedSuccessfully(false), 4500);
   };
 
@@ -754,6 +850,57 @@ export default function App() {
       });
       return { ...prev, currentSimulatedDay: nextDay, clues: nextClues };
     });
+    // Celebratory effects
+    confetti({
+      particleCount: 110,
+      spread: 75,
+      origin: { y: 0.6 }
+    });
+    playFestiveSound();
+  };
+
+  const handleUnlockClueWithCoins = (clueDay: number) => {
+    // Check if child is logged in
+    if (!accountSession.isLoggedIn) {
+      alert("🔑 Connecte-toi au KidiClub pour accumuler ou dépenser tes KidiCoins !");
+      return;
+    }
+    // Check if enough coins
+    if (accountSession.kidiCoins < 10) {
+      alert("❌ Oups ! Tu as besoin de 10 KidiCoins pour débloquer cet indice. Joue aux KidiGames pour en gagner !");
+      return;
+    }
+    
+    // Deduct coins & unlock clue
+    setAccountSession((prev) => ({
+      ...prev,
+      kidiCoins: prev.kidiCoins - 10
+    }));
+
+    setChallenge((prev) => {
+      const nextClues = prev.clues.map((clue) => {
+        if (clue.day === clueDay) {
+          return { ...clue, isUnlocked: true };
+        }
+        return clue;
+      });
+      return { ...prev, clues: nextClues };
+    });
+
+    // Celebrate!
+    confetti({
+      particleCount: 150,
+      spread: 85,
+      origin: { y: 0.65 }
+    });
+    playFestiveSound();
+  };
+
+  const handleLikeStreamItem = (itemId: string) => {
+    setStreamLikes((prev) => ({
+      ...prev,
+      [itemId]: (prev[itemId] || 0) + 1,
+    }));
   };
 
   const handleResetTimeline = () => {
@@ -803,7 +950,7 @@ export default function App() {
 
   // Filters calculation
   const filteredChallengesList = challenges.filter((ch) => {
-    const matchesCategory = filterCategory === "all" || ch.category === filterCategory;
+    const matchesCategory = filterCategory.length === 0 || filterCategory.includes(ch.category);
     const matchesAge = filterAge === "all" || ch.ageGroup === filterAge;
     const matchesMode = filterMode === "all" || 
       (filterMode === "demo" && ch.isDemo) || 
@@ -874,109 +1021,200 @@ export default function App() {
 
       {true ? (
         // Children view workspace
-        <main className="max-w-7xl mx-auto px-6 mt-6 flex-1 w-full space-y-6">
+        <main className="max-w-7xl mx-auto px-6 mt-6 flex-1 w-full flex flex-col lg:flex-row gap-8 items-start">
           
-          {/* Main Top Navigation Row between Explorer, Creative Studio, Games, Music, and settings */}
-          <div className="flex flex-col lg:flex-row justify-between items-center bg-slate-900/60 p-2 rounded-2xl border border-slate-900 gap-3">
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setActiveTab("explorer")}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
-                  activeTab === "explorer"
-                    ? "bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md"
-                    : "text-slate-400 hover:text-white hover:bg-slate-900"
-                }`}
+          {/* LEFT SIDEBAR NAVIGATION PANEL */}
+          <div className={`w-full ${isSidebarCollapsed ? "lg:w-[76px]" : "lg:w-[280px]"} shrink-0 lg:sticky lg:top-6 flex flex-col gap-4 transition-all duration-300`}>
+            
+            {/* Quick avatar summary for children */}
+            <div className={`bg-gradient-to-br from-indigo-950/45 via-slate-900 to-indigo-950/25 border border-slate-900 ${isSidebarCollapsed ? "p-3.5 justify-center" : "p-5"} rounded-2xl relative overflow-hidden flex items-center gap-3`}>
+              <div 
+                className="w-10 h-10 bg-gradient-to-tr from-amber-500 to-amber-600 border border-amber-400 text-slate-950 text-md font-black flex items-center justify-center rounded-full shrink-0 shadow-lg select-none"
+                title={`${profile.childName || "Visiteur"} - ${statsStars} Stars`}
               >
-                <Compass className="w-4 h-4" />
-                {t("nav.explorer", profile.language)}
-              </button>
-              
-              <button
-                onClick={() => setActiveTab("workspace")}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
-                  activeTab === "workspace"
-                    ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-md"
-                    : "text-slate-400 hover:text-white hover:bg-slate-900"
-                }`}
-              >
-                <Zap className="w-4 h-4" />
-                {t("nav.workspace", profile.language)} : {challenge.title.slice(0, 16)}...
-              </button>
-
-              <button
-                onClick={() => setActiveTab("kidi-games")}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
-                  activeTab === "kidi-games"
-                    ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow-md"
-                    : "text-slate-400 hover:text-white hover:bg-slate-900"
-                }`}
-              >
-                <Gamepad2 className="w-4 h-4" />
-                {t("nav.kidigames", profile.language)}
-              </button>
-
-              <button
-                onClick={() => setActiveTab("kidi-music")}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
-                  activeTab === "kidi-music"
-                    ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-md"
-                    : "text-slate-400 hover:text-white hover:bg-slate-900"
-                }`}
-              >
-                <Music className="w-4 h-4" />
-                {t("nav.kidimusic", profile.language)}
-              </button>
-
-              <button
-                onClick={() => setActiveTab("kidi-stream")}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
-                  activeTab === "kidi-stream"
-                    ? "bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-md"
-                    : "text-slate-400 hover:text-white hover:bg-slate-900"
-                }`}
-              >
-                <Film className="w-4 h-4" />
-                {t("nav.kidistream", profile.language)}
-              </button>
-
-              <button
-                onClick={() => setActiveTab("partners")}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
-                  activeTab === "partners"
-                    ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-slate-950 shadow-md"
-                    : "text-slate-400 hover:text-white hover:bg-slate-900"
-                }`}
-              >
-                <Users className="w-4 h-4" />
-                {t("nav.partners", profile.language)}
-              </button>
-
-              <button
-                onClick={() => setActiveTab("accounts")}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition ${
-                  activeTab === "accounts"
-                    ? "bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md"
-                    : "text-slate-400 hover:text-white hover:bg-slate-900"
-                }`}
-              >
-                <Coins className="w-4 h-4 text-amber-400" />
-                {t("nav.kidiclub", profile.language)}
-                {accountSession.isLoggedIn ? (
-                  <span className="text-[10px] bg-amber-500/10 text-amber-400 px-1.5 py-0.5 rounded font-mono font-bold">
-                    {accountSession.kidiCoins} Coins
+                🚀
+              </div>
+              {!isSidebarCollapsed && (
+                <div className="text-left leading-tight min-w-0 transition-all duration-305">
+                  <span className="text-[9px] text-slate-400 block font-mono font-bold uppercase tracking-wider">
+                    Artiste Junior
                   </span>
-                ) : null}
-              </button>
+                  <span className="text-sm font-black text-white block truncate">
+                    {profile.childName || "Visiteur"}
+                  </span>
+                  <span className="text-[10px] text-amber-550 font-bold block font-mono leading-none mt-0.5 animate-pulse">
+                    ★ {statsStars} Stars
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Main Navigation Stack */}
+            <div className="bg-slate-900/60 p-3 rounded-2xl border border-slate-900 flex flex-col gap-2 shadow-xl">
+              <div className="flex items-center justify-between px-1 select-none">
+                {!isSidebarCollapsed && (
+                  <span className="text-[10px] text-slate-500 uppercase tracking-widest font-mono font-bold block text-left px-1 py-1">
+                    Menu Principal
+                  </span>
+                )}
+                <button
+                  onClick={() => {
+                    const nextState = !isSidebarCollapsed;
+                    setIsSidebarCollapsed(nextState);
+                    localStorage.setItem("kidiworld_sidebar_collapsed", String(nextState));
+                  }}
+                  className={`p-1.5 hover:bg-slate-950 text-slate-400 hover:text-white rounded-lg transition duration-150 cursor-pointer ${isSidebarCollapsed ? "mx-auto w-full flex justify-center" : ""}`}
+                  title={isSidebarCollapsed ? "Déplier le menu" : "Replier le menu"}
+                >
+                  {isSidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+                </button>
+              </div>
+
+              {/* Grid or vertical stack depending on the screen dimensions */}
+              <div className="flex flex-wrap lg:flex-col gap-1.5 w-full">
+                
+                {/* EXPLORATEUR */}
+                <button
+                  onClick={() => setActiveTab("explorer")}
+                  className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs font-bold transition flex-grow sm:flex-initial lg:w-full text-left cursor-pointer ${
+                    activeTab === "explorer"
+                      ? "bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 shadow-md font-black"
+                      : "text-slate-400 hover:text-white hover:bg-slate-950/60"
+                  } ${isSidebarCollapsed ? "lg:justify-center lg:px-0" : ""}`}
+                  title={t("nav.explorer", profile.language)}
+                >
+                  <Compass className="w-4 h-4 shrink-0" />
+                  <span className={isSidebarCollapsed ? "lg:hidden" : ""}>{t("nav.explorer", profile.language)}</span>
+                </button>
+
+                {/* WORKSPACE - MON STUDIO */}
+                <button
+                  onClick={() => setActiveTab("workspace")}
+                  className={`flex items-center justify-between gap-2.5 px-4 py-3 rounded-xl text-xs font-bold transition flex-grow sm:flex-initial lg:w-full text-left cursor-pointer ${
+                    activeTab === "workspace"
+                      ? "bg-gradient-to-r from-indigo-505 to-purple-500 text-white shadow-md font-black"
+                      : "text-slate-400 hover:text-white hover:bg-slate-950/60"
+                  } ${isSidebarCollapsed ? "lg:justify-center lg:px-0" : ""}`}
+                  title={t("nav.workspace", profile.language)}
+                >
+                  <div className={`flex items-center gap-2.5 min-w-0 ${isSidebarCollapsed ? "lg:justify-center w-full" : ""}`}>
+                    <Zap className="w-4 h-4 text-amber-505 shrink-0" />
+                    <span className={isSidebarCollapsed ? "lg:hidden truncate" : "truncate"}>{t("nav.workspace", profile.language)}</span>
+                  </div>
+                  {!isSidebarCollapsed && (
+                    <span className="text-[9px] bg-slate-950/60 text-slate-400 border border-slate-800 px-1.5 py-0.5 rounded font-mono shrink-0 truncate max-w-[80px] hidden lg:inline-block">
+                      {challenge.title.slice(0, 8)}...
+                    </span>
+                  )}
+                </button>
+
+                {/* KIDI GAMES */}
+                <button
+                  onClick={() => setActiveTab("kidi-games")}
+                  className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs font-bold transition flex-grow sm:flex-initial lg:w-full text-left cursor-pointer ${
+                    activeTab === "kidi-games"
+                      ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow-md font-black"
+                      : "text-slate-400 hover:text-white hover:bg-slate-950/60"
+                  } ${isSidebarCollapsed ? "lg:justify-center lg:px-0" : ""}`}
+                  title={t("nav.kidigames", profile.language)}
+                >
+                  <Gamepad2 className="w-4 h-4 shrink-0" />
+                  <span className={isSidebarCollapsed ? "lg:hidden" : ""}>{t("nav.kidigames", profile.language)}</span>
+                </button>
+
+                {/* KIDI MUSIC */}
+                <button
+                  onClick={() => setActiveTab("kidi-music")}
+                  className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs font-bold transition flex-grow sm:flex-initial lg:w-full text-left cursor-pointer ${
+                    activeTab === "kidi-music"
+                      ? "bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-md font-black"
+                      : "text-slate-400 hover:text-white hover:bg-slate-950/60"
+                  } ${isSidebarCollapsed ? "lg:justify-center lg:px-0" : ""}`}
+                  title={t("nav.kidimusic", profile.language)}
+                >
+                  <Music className="w-4 h-4 shrink-0" />
+                  <span className={isSidebarCollapsed ? "lg:hidden" : ""}>{t("nav.kidimusic", profile.language)}</span>
+                </button>
+
+                {/* KIDI STREAM */}
+                <button
+                  onClick={() => setActiveTab("kidi-stream")}
+                  className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs font-bold transition flex-grow sm:flex-initial lg:w-full text-left cursor-pointer ${
+                    activeTab === "kidi-stream"
+                      ? "bg-gradient-to-r from-indigo-500 to-indigo-600 text-white shadow-md font-black"
+                      : "text-slate-400 hover:text-white hover:bg-slate-950/60"
+                  } ${isSidebarCollapsed ? "lg:justify-center lg:px-0" : ""}`}
+                  title={t("nav.kidistream", profile.language)}
+                >
+                  <Film className="w-4 h-4 shrink-0" />
+                  <span className={isSidebarCollapsed ? "lg:hidden" : ""}>{t("nav.kidistream", profile.language)}</span>
+                </button>
+
+                {/* ABOUT US (QUI SOMMES-NOUS ?) */}
+                <button
+                  onClick={() => setActiveTab("about")}
+                  className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs font-bold transition flex-grow sm:flex-initial lg:w-full text-left cursor-pointer ${
+                    activeTab === "about"
+                      ? "bg-gradient-to-r from-amber-500/25 to-amber-500/10 text-white border border-amber-500/30 shadow-md font-black"
+                      : "text-slate-400 hover:text-white hover:bg-slate-950/60"
+                  } ${isSidebarCollapsed ? "lg:justify-center lg:px-0" : ""}`}
+                  title={t("nav.about", profile.language)}
+                >
+                  <BookOpen className="w-4 h-4 text-amber-505 shrink-0" />
+                  <span className={isSidebarCollapsed ? "lg:hidden" : ""}>{t("nav.about", profile.language)}</span>
+                </button>
+
+                {/* PARTNERS */}
+                <button
+                  onClick={() => setActiveTab("partners")}
+                  className={`flex items-center gap-2.5 px-4 py-3 rounded-xl text-xs font-bold transition flex-grow sm:flex-initial lg:w-full text-left cursor-pointer ${
+                    activeTab === "partners"
+                      ? "bg-gradient-to-r from-blue-500 to-indigo-505 text-slate-950 shadow-md font-black"
+                      : "text-slate-400 hover:text-white hover:bg-slate-950/60"
+                  } ${isSidebarCollapsed ? "lg:justify-center lg:px-0" : ""}`}
+                  title={t("nav.partners", profile.language)}
+                >
+                  <Users className="w-4 h-4 shrink-0" />
+                  <span className={isSidebarCollapsed ? "lg:hidden" : ""}>{t("nav.partners", profile.language)}</span>
+                </button>
+
+                {/* KIDICLUB (ACCOUNTS) */}
+                <button
+                  onClick={() => setActiveTab("accounts")}
+                  className={`flex items-center justify-between gap-2.5 px-4 py-3 rounded-xl text-xs font-bold transition flex-grow sm:flex-initial lg:w-full text-left cursor-pointer relative ${
+                    activeTab === "accounts"
+                      ? "bg-gradient-to-r from-indigo-650 to-violet-650 text-white shadow-md font-black"
+                      : "text-slate-400 hover:text-white hover:bg-slate-950/60"
+                  } ${isSidebarCollapsed ? "lg:justify-center lg:px-0" : ""}`}
+                  title={t("nav.kidiclub", profile.language)}
+                >
+                  <div className={`flex items-center gap-2.5 min-w-0 ${isSidebarCollapsed ? "lg:justify-center" : ""}`}>
+                    <Coins className="w-4 h-4 text-amber-400 shrink-0" />
+                    <span className={isSidebarCollapsed ? "lg:hidden" : ""}>{t("nav.kidiclub", profile.language)}</span>
+                  </div>
+                  {accountSession.isLoggedIn && !isSidebarCollapsed ? (
+                    <span className="text-[10px] bg-amber-500/15 text-amber-400 px-1.5 py-0.5 rounded font-mono font-bold shrink-0">
+                      {accountSession.kidiCoins} Coins
+                    </span>
+                  ) : null}
+                </button>
+
+              </div>
+
             </div>
 
             {/* Quick alert bar to show leftover screen-time limits dynamically */}
             {profile.screenTimeLimitMinutes !== 9999 && (
-              <div className="flex items-center gap-2 text-xs text-amber-400 bg-amber-500/5 px-3.5 py-1.5 rounded-xl border border-amber-500/10 font-mono">
-                <Clock className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: "10s" }} />
-                <span>Supervision active : session sécurisée</span>
+              <div className={`flex items-center gap-2 text-[10px] text-amber-500 bg-amber-500/5 ${isSidebarCollapsed ? "p-3 justify-center" : "px-4 py-3"} rounded-2xl border border-amber-500/10 font-mono text-left select-none`}>
+                <Clock className="w-5 h-5 text-amber-500 animate-spin shrink-0 animate-pulse" style={{ animationDuration: "12s" }} />
+                {!isSidebarCollapsed && <span className="transition-all duration-300">Supervision active : session protégée sous contrôle parental.</span>}
               </div>
             )}
+
           </div>
+
+          {/* RIGHT ACTIONABLE CONTENT AREA */}
+          <div className="flex-1 w-full space-y-6 min-w-0">
 
           {activeTab === "explorer" && (
             <div className="space-y-6 animate-fadeIn">
@@ -1072,29 +1310,44 @@ export default function App() {
                   {/* Category Filter selector */}
                   <div className="space-y-1.5">
                     <label className="text-[10px] text-slate-400 uppercase tracking-wider font-mono">
-                      Catégories Artistiques
+                      Catégories Artistiques <span className="text-amber-500/70">(multi-sélection)</span>
                     </label>
                     <div className="flex flex-wrap gap-1.5">
-                      {["all", "cinema", "music", "design", "animation", "photography", "architecture"].map((cat) => (
+                      {[
+                        { id: "cinema", label: "🎬 CINÉMA" },
+                        { id: "music", label: "🎵 MUSIC" },
+                        { id: "design", label: "🎨 DESIGN" },
+                        { id: "animation", label: "👾 3D & JEUX" },
+                        { id: "photography", label: "📸 PHOTO" },
+                        { id: "architecture", label: "🏛️ ARCHI" },
+                        { id: "tvseries", label: "📺 TV SÉRIES" },
+                        { id: "podcast", label: "🎙️ PODCAST" },
+                      ].map((cat) => {
+                        const isSelected = filterCategory.includes(cat.id);
+                        return (
+                          <button
+                            key={cat.id}
+                            onClick={() => setFilterCategory(prev =>
+                              prev.includes(cat.id) ? prev.filter(c => c !== cat.id) : [...prev, cat.id]
+                            )}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 whitespace-nowrap select-none ${
+                              isSelected
+                                ? "bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/20 scale-105"
+                                : "bg-slate-950/60 text-slate-400 hover:text-slate-200 border border-slate-800 hover:border-slate-600"
+                            }`}
+                          >
+                            {cat.label}{isSelected && <span className="ml-1 text-slate-950">✓</span>}
+                          </button>
+                        );
+                      })}
+                      {filterCategory.length > 0 && (
                         <button
-                          key={cat}
-                          onClick={() => setFilterCategory(cat)}
-                          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap ${
-                            filterCategory === cat
-                              ? "bg-amber-500 text-slate-950 font-black"
-                              : "bg-slate-950/60 text-slate-400 hover:text-slate-200 border border-slate-800"
-                          }`}
+                          onClick={() => setFilterCategory([])}
+                          className="px-3 py-1.5 rounded-lg text-xs font-bold transition whitespace-nowrap bg-rose-500/10 text-rose-400 border border-rose-500/20 hover:bg-rose-500/20"
                         >
-                          {cat === "all" ? "🔥 Toutes" 
-                           : cat === "cinema" ? "🎬 KIDI CINÉMA / SCÉNARIO" 
-                           : cat === "music" ? "🎵 KIDI MUSIC" 
-                           : cat === "design" ? "🎨 KIDI DESIGN & MODE"
-                           : cat === "animation" ? "👾 KIDI 3D & JEUX"
-                           : cat === "photography" ? "📸 KIDI PHOTOGRAPHY"
-                           : cat === "architecture" ? "🏛️ KIDI ARCHITECTURE"
-                           : cat}
+                          ✕ Tout effacer
                         </button>
-                      ))}
+                      )}
                     </div>
                   </div>
 
@@ -1183,7 +1436,7 @@ export default function App() {
                       <button
                         onClick={() => {
                           setSearchQuery("");
-                          setFilterCategory("all");
+                          setFilterCategory([]);
                           setFilterAge("all");
                           setFilterMode("all");
                         }}
@@ -1229,6 +1482,8 @@ export default function App() {
                         <option value="animation">👾 KIDI 3D & JEUX</option>
                         <option value="photography">📸 KIDI PHOTOGRAPHY</option>
                         <option value="architecture">🏛️ KIDI ARCHITECTURE</option>
+                        <option value="tvseries">📺 TV SÉRIES</option>
+                        <option value="podcast">🎙️ PODCAST</option>
                       </select>
                     </div>
 
@@ -1502,12 +1757,40 @@ export default function App() {
                 </div>
               </div>
 
+              {/* Dynamic Entertainment Player Modal */}
+              {isStreamPlayerPlaying && selectedStreamItem && (
+                <KidiStreamPlayer
+                  item={selectedStreamItem}
+                  onClose={() => {
+                    setIsStreamPlayerPlaying(false);
+                    setSelectedStreamItem(null);
+                  }}
+                  language={profile.language}
+                  likesCount={streamLikes[selectedStreamItem.id] || 0}
+                  onLike={handleLikeStreamItem}
+                  playCelebration={() => {
+                    confetti({
+                      particleCount: 130,
+                      spread: 75,
+                      origin: { y: 0.6 }
+                    });
+                    playFestiveSound();
+                  }}
+                />
+              )}
+
             </div>
           )}
 
           {activeTab === "partners" && (
             <div className="animate-fadeIn">
               <PartnersSection language={profile.language} />
+            </div>
+          )}
+
+          {activeTab === "about" && (
+            <div className="animate-fadeIn">
+              <AboutUsSection language={profile.language} />
             </div>
           )}
 
@@ -1648,11 +1931,19 @@ export default function App() {
                                 </div>
                               </div>
 
-                              {clue.isUnlocked && (
+                              {clue.isUnlocked ? (
                                 <div className="mt-2 flex items-center justify-between text-[9px] font-mono text-slate-400 border-t border-slate-900 pt-1.5">
                                   <span>VALEUR : PRO</span>
                                   <span className="text-amber-500">{clue.type.toUpperCase()}</span>
                                 </div>
+                              ) : (
+                                <button
+                                  onClick={() => handleUnlockClueWithCoins(clue.day)}
+                                  className="mt-2 w-full bg-indigo-650 hover:bg-indigo-600 hover:scale-[1.03] text-indigo-100 border border-indigo-505/35 font-bold text-[9.5px] py-1 px-1 rounded-xl font-mono transition-all duration-150 cursor-pointer text-center select-none block"
+                                  title="Dépense 10 KidiCoins pour révéler ce secret à l'avance !"
+                                >
+                                  Débloquer : 10 Coins 🔑
+                                </button>
                               )}
                             </div>
                           ))}
@@ -1787,6 +2078,7 @@ export default function App() {
               </div>
             </div>
           )}
+          </div>
         </main>
       ) : null}
 
@@ -1797,8 +2089,8 @@ export default function App() {
           Dénichons et stimulons ensemble l'émergence de tous les talents de demain : cinéma, écriture, musique originale, stylisme de mode, graphisme, dessins, jeux vidéo et photographie !
         </div>
         <div className="text-[10px] text-slate-600 border-t border-slate-900/40 pt-3 max-w-xl mx-auto space-y-1">
-          <p>⚖️ <strong>Mentions Légales :</strong> Il est expressément mentionné que <strong>KIDI.WORLD</strong> est une entité de <strong>LINKYOURART</strong> et est donc son entière propriété.</p>
-          <p className="text-slate-700">⚖️ <strong>Legal Notice :</strong> It is explicitly stated that <strong>KIDI.WORLD</strong> is an entity of <strong>LINKYOURART</strong> and is therefore its entire property.</p>
+          <p>⚖️ <strong>Mentions Légales :</strong> Il est expressément mentionné que <strong>KIDI WORLD</strong> est une entité de <strong>LINKYOURART</strong> et est donc son entière propriété.</p>
+          <p className="text-slate-700">⚖️ <strong>Legal Notice :</strong> It is explicitly stated that <strong>KIDI WORLD</strong> is an entity of <strong>LINKYOURART</strong> and is therefore its entire property.</p>
         </div>
       </footer>
 

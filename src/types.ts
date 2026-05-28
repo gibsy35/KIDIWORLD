@@ -1,7 +1,7 @@
 export interface UserProfile {
   childName: string;
   childAge: number; // 4 to 18
-  language: "fr" | "en" | "es" | "ja";
+  language: "fr" | "en";
   parentEmail: string;
   parentApproved: boolean;
   screenTimeLimitMinutes: number; // 15, 30, 45, 60 or unlimited
@@ -91,4 +91,23 @@ export interface Message {
   role: "user" | "coach";
   text: string;
   timestamp: string;
+}
+
+export interface StreamItem {
+  id: string;
+  title: string;
+  category: string;
+  author: string;
+  authorAge: number;
+  description: string;
+  banner: string;
+  rating: string;
+  feedback: string;
+  themeColor: string;
+  badge: string;
+  mediaType: "cinema" | "music" | "costume" | "photography";
+  contentSnippet: {
+    act1: string;
+    lyrics: string;
+  };
 }
