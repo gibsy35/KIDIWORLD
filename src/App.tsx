@@ -2066,16 +2066,6 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* AI Coach Assistant Sidebar - 1 Column */}
-                <div className="xl:col-span-1">
-                  <AICreativeCoach
-                    challengeTitle={challenge.title}
-                    unlockedClues={unlockedClues}
-                    draftScreenplay={draftScreenplay}
-                    draftMusic={draftMusic}
-                    draftCostume={draftCostume}
-                  />
-                </div>
               </div>
             </div>
           )}
@@ -2085,6 +2075,15 @@ export default function App() {
 
       {/* Footer */}
       <Footer language={profile.language} />
+
+      {/* Global Floating AI Coach — accessible depuis toute la plateforme */}
+      <AICreativeCoach
+        challengeTitle={challenge?.title || "KIDIWORLD"}
+        unlockedClues={unlockedClues}
+        draftScreenplay={draftScreenplay}
+        draftMusic={draftMusic}
+        draftCostume={draftCostume}
+      />
 
       {/* GLOBAL HIGH-INDEX ONBOARDING WELCOME MODAL OVERLAY */}
       {isTutorialOpen && (

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { MessageSquare, Send, Sparkles, Smile, Bot, VolumeX, Volume2, User, Wand, Film, Music as MusicIcon, AudioLines } from "lucide-react";
+import { MessageSquare, Send, Sparkles, Bot, User, Wand, Film, Music as MusicIcon, X, Minimize2, Maximize2, ChevronDown } from "lucide-react";
 import { Message } from "../types";
 
 interface AICreativeCoachProps {
@@ -20,6 +20,8 @@ export default function AICreativeCoach({
   draftCostume,
 }: AICreativeCoachProps) {
   const [activeCoach, setActiveCoach] = useState<CoachType>("linky");
+  const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [isPlayingSpeech, setIsPlayingSpeech] = useState<number | null>(null);
 
   const coaches = {
@@ -200,160 +202,176 @@ export default function AICreativeCoach({
   ];
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col h-[545px]">
-      {/* Mentor Selection Row */}
-      <div className="bg-slate-950 p-2.5 border-b border-slate-900/80 flex items-center justify-between gap-1.5 overflow-x-auto select-none shrink-0 scrollbar-none">
-        <span className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest pl-1 shrink-0">Sélectionne Ton Parrain :</span>
-        <div className="flex gap-1.5">
-          {(Object.keys(coaches) as CoachType[]).map((coachKey) => {
-            const isActive = activeCoach === coachKey;
-            const c = coaches[coachKey];
-            return (
-              <button
-                key={coachKey}
-                onClick={() => handleSwitchCoach(coachKey)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10.5px] font-bold transition cursor-pointer ${
-                  isActive 
-                    ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md shadow-indigo-900/20"
-                    : "bg-slate-900 border border-slate-850 text-slate-400 hover:text-white"
-                }`}
-              >
-                <span>{c.avatar}</span>
-                <span>{c.name.split(" ")[0]}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Header Info */}
-      <div className="bg-slate-950/70 p-3 border-b border-slate-800/80 flex justify-between items-center shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-violet-500 to-pink-500 flex items-center justify-center shadow-lg relative shrink-0">
-            {activeCoach === "linky" ? (
-              <Bot className="w-5 h-5 text-white animate-pulse" />
-            ) : activeCoach === "jerome" ? (
-              <Film className="w-5 h-5 text-white" />
-            ) : (
-              <MusicIcon className="w-5 h-5 text-white" />
-            )}
-            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-400 border border-slate-950" />
+    <>
+      {/* Floating trigger button */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          className="fixed bottom-6 right-6 z-[100] group flex items-center gap-3 pl-4 pr-5 py-3.5 rounded-2xl bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 hover:from-violet-500 hover:to-indigo-500 shadow-2xl shadow-violet-900/50 transition-all duration-300 hover:scale-105 active:scale-95 border border-violet-400/20"
+          style={{ animation: "floatPulse 3s ease-in-out infinite" }}
+        >
+          <div className="relative">
+            <Bot className="w-5 h-5 text-white" />
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border border-violet-600 animate-pulse" />
           </div>
           <div className="text-left">
-            <h4 className="text-xs font-black text-white flex items-center gap-1 leading-none">
-              {coaches[activeCoach].name} 
-              <span className="text-[9px] uppercase font-mono bg-violet-500/10 text-violet-400 border border-violet-500/25 px-1.5 py-0.25 rounded">Mentor IA</span>
-            </h4>
-            <p className="text-[10px] text-slate-400 font-semibold leading-normal mt-0.5">{coaches[activeCoach].desc}</p>
+            <div className="text-white font-black text-sm leading-none">Coach Linky</div>
+            <div className="text-violet-300 text-[10px] font-medium mt-0.5">Ton mentor IA 🚀</div>
           </div>
-        </div>
+          <span className="ml-1 text-[18px] animate-bounce">💬</span>
+        </button>
+      )}
 
-        <div className="flex items-center gap-1.5 shrink-0">
-          <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-spin" style={{ animationDuration: "6s" }} />
-          <span className="text-[9.5px] font-mono font-bold text-amber-400 tracking-wider">LINKYOURART SPONSOR</span>
-        </div>
-      </div>
-
-      {/* Messages Feed */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-950/60 font-sans">
-        {messages.map((msg, index) => (
-          <div key={index} className={`flex gap-2.5 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-            {msg.role !== "user" && (
-              <div className="w-8 h-8 rounded-lg bg-violet-600/15 flex items-center justify-center text-violet-400 self-end border border-violet-600/20 shrink-0">
-                {activeCoach === "linky" ? <Bot className="w-4 h-4" /> : activeCoach === "jerome" ? <Film className="w-4 h-4" /> : <MusicIcon className="w-4 h-4" />}
+      {/* Floating chat window */}
+      {isOpen && (
+        <div
+          className={`fixed bottom-6 right-6 z-[100] flex flex-col bg-slate-900 border border-slate-700/80 rounded-3xl shadow-[0_24px_80px_rgba(0,0,0,0.7)] transition-all duration-300 overflow-hidden ${
+            isExpanded
+              ? "w-[560px] h-[680px]"
+              : "w-[380px] h-[540px]"
+          }`}
+        >
+          {/* Titlebar */}
+          <div className="bg-gradient-to-r from-violet-900/80 via-indigo-900/80 to-violet-900/80 border-b border-violet-800/40 px-4 py-3 flex items-center justify-between shrink-0">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-violet-500 to-pink-500 flex items-center justify-center shadow-lg relative shrink-0">
+                {activeCoach === "linky" ? (
+                  <Bot className="w-4 h-4 text-white animate-pulse" />
+                ) : activeCoach === "jerome" ? (
+                  <Film className="w-4 h-4 text-white" />
+                ) : (
+                  <MusicIcon className="w-4 h-4 text-white" />
+                )}
+                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 border border-slate-900" />
               </div>
-            )}
-            <div
-              className={`max-w-[80%] rounded-2xl p-3.5 text-xs text-left leading-relaxed shadow-md relative ${
-                msg.role === "user"
-                  ? "bg-violet-600 text-white rounded-br-none"
-                  : "bg-slate-900 border border-slate-800 text-slate-200 rounded-bl-none font-medium whitespace-pre-line"
-              }`}
-            >
-              {msg.text}
-              <div className="flex justify-between items-center gap-4 mt-1.5 border-t border-slate-800/20 pt-1">
-                <span className={`text-[9px] block opacity-60 font-mono`}>{msg.timestamp}</span>
-                {msg.role !== "user" && (
+              <div>
+                <div className="text-white font-black text-sm leading-none flex items-center gap-2">
+                  {coaches[activeCoach].name}
+                  <span className="text-[9px] uppercase font-mono bg-violet-500/20 text-violet-300 border border-violet-500/20 px-1.5 py-0.5 rounded">Mentor IA</span>
+                </div>
+                <div className="text-[10px] text-violet-300/80 mt-0.5">{coaches[activeCoach].desc}</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="w-7 h-7 rounded-lg bg-slate-800/60 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition cursor-pointer"
+                title={isExpanded ? "Réduire" : "Agrandir"}
+              >
+                {isExpanded ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
+              </button>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="w-7 h-7 rounded-lg bg-slate-800/60 hover:bg-rose-500/80 flex items-center justify-center text-slate-400 hover:text-white transition cursor-pointer"
+                title="Fermer"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Mentor selector */}
+          <div className="bg-slate-950/80 px-3 py-2 border-b border-slate-800/60 flex items-center gap-1.5 shrink-0">
+            <span className="text-[9px] font-mono font-black text-slate-500 uppercase tracking-widest shrink-0">Parrain :</span>
+            <div className="flex gap-1.5 flex-1">
+              {(Object.keys(coaches) as CoachType[]).map((coachKey) => {
+                const isActive = activeCoach === coachKey;
+                const c = coaches[coachKey];
+                return (
                   <button
-                    type="button"
-                    onClick={() => speakText(msg.text, index)}
-                    className="text-[10px] flex items-center gap-1 text-violet-400 hover:text-violet-300 font-bold pointer-events-auto cursor-pointer"
-                    title="Lire à haute voix"
+                    key={coachKey}
+                    onClick={() => handleSwitchCoach(coachKey)}
+                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold transition cursor-pointer flex-1 justify-center ${
+                      isActive
+                        ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md"
+                        : "bg-slate-900 border border-slate-800 text-slate-400 hover:text-white"
+                    }`}
                   >
-                    {isPlayingSpeech === index ? (
-                      <>
-                        <AudioLines className="w-3.5 h-3.5 animate-pulse text-amber-400" />
-                        <span className="text-amber-400 text-[9px] font-semibold">Lecture...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Volume2 className="w-3.5 h-3.5" />
-                        <span className="text-[9px] font-semibold">Écouter</span>
-                      </>
-                    )}
+                    <span>{c.avatar}</span>
+                    <span className="hidden sm:inline">{c.name.split(" ")[0]}</span>
                   </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Messages */}
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-950/60 font-sans">
+            {messages.map((msg, index) => (
+              <div key={index} className={`flex gap-2.5 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                {msg.role === "coach" && (
+                  <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-violet-500 to-pink-500 flex items-center justify-center shrink-0 mt-0.5 shadow-md text-sm">
+                    {coaches[activeCoach].avatar}
+                  </div>
+                )}
+                <div className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-[11.5px] leading-relaxed font-sans shadow-md ${
+                  msg.role === "user"
+                    ? "bg-gradient-to-br from-violet-600 to-indigo-600 text-white rounded-br-sm"
+                    : "bg-slate-800/80 text-slate-200 rounded-bl-sm border border-slate-700/40"
+                }`}>
+                  <p className="whitespace-pre-wrap">{msg.text}</p>
+                  <p className={`text-[9px] mt-1 ${msg.role === "user" ? "text-violet-300" : "text-slate-500"}`}>{msg.timestamp}</p>
+                </div>
+                {msg.role === "user" && (
+                  <div className="w-7 h-7 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0 mt-0.5 shadow-md">
+                    <User className="w-3.5 h-3.5 text-slate-400" />
+                  </div>
                 )}
               </div>
-            </div>
-            {msg.role === "user" && (
-              <div className="w-8 h-8 rounded-lg bg-indigo-600/15 flex items-center justify-center text-indigo-400 self-end border border-indigo-600/20 shrink-0">
-                <User className="w-4 h-4" />
+            ))}
+            {isTyping && (
+              <div className="flex gap-2.5 justify-start">
+                <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-violet-500 to-pink-500 flex items-center justify-center shrink-0 text-sm">
+                  {coaches[activeCoach].avatar}
+                </div>
+                <div className="bg-slate-800/80 border border-slate-700/40 rounded-2xl rounded-bl-sm px-4 py-3 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                  <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+                  <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                </div>
               </div>
             )}
           </div>
-        ))}
 
-        {isTyping && (
-          <div className="flex gap-2.5 justify-start">
-            <div className="w-8 h-8 rounded-lg bg-violet-600/15 flex items-center justify-center text-violet-400 self-end border border-violet-600/20 shrink-0">
-              {activeCoach === "linky" ? <Bot className="w-4 h-4" /> : activeCoach === "jerome" ? <Film className="w-4 h-4" /> : <MusicIcon className="w-4 h-4" />}
-            </div>
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 rounded-bl-none max-w-[80%]">
-              <div className="flex gap-1.5 justify-center items-center py-1 px-2">
-                <div className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                <div className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                <div className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-              </div>
-            </div>
+          {/* Smart questions */}
+          <div className="px-3 py-2 bg-slate-950/70 border-t border-slate-800/40 flex gap-1.5 overflow-x-auto scrollbar-none shrink-0">
+            {smartQuestions.map((q) => (
+              <button
+                key={q}
+                onClick={() => setInput(q)}
+                className="whitespace-nowrap text-[9.5px] px-2.5 py-1 rounded-full bg-slate-800 border border-slate-700 text-slate-400 hover:text-amber-400 hover:border-amber-500/30 transition cursor-pointer font-bold shrink-0"
+              >
+                {q}
+              </button>
+            ))}
           </div>
-        )}
-        <div ref={scrollRef} />
-      </div>
 
-      {/* Suggested fast buttons for younger users */}
-      <div className="bg-slate-950 p-2 border-t border-slate-900 flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-none shrink-0">
-        {smartQuestions.map((q, idx) => (
-          <button
-            key={idx}
-            disabled={isTyping}
-            onClick={() => {
-              setInput(q);
-            }}
-            className="text-[10px] font-bold bg-slate-900 hover:bg-slate-800 active:bg-slate-800 text-violet-300 border border-violet-850/20 px-3 py-1.5 rounded-full transition shrink-0 pointer-events-auto cursor-pointer"
-          >
-            💡 {q}
-          </button>
-        ))}
-      </div>
+          {/* Input */}
+          <form onSubmit={handleSend} className="px-3 py-3 bg-slate-950/80 border-t border-slate-800/60 flex gap-2 shrink-0">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder={`Écris à ${coaches[activeCoach].name.split(" ")[0]}...`}
+              className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-500 outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/20 transition"
+            />
+            <button
+              type="submit"
+              disabled={!input.trim() || isTyping}
+              className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 disabled:opacity-40 flex items-center justify-center transition cursor-pointer shadow-lg shadow-violet-900/30 active:scale-95"
+            >
+              <Send className="w-4 h-4 text-white" />
+            </button>
+          </form>
+        </div>
+      )}
 
-      {/* Input Form */}
-      <form onSubmit={handleSendMessage} className="bg-slate-950 p-3 border-t border-slate-900 flex gap-2 shrink-0 font-sans">
-        <input
-          type="text"
-          placeholder={`Pose une question à ${activeCoach === "linky" ? "Linky" : activeCoach === "jerome" ? "Jérôme" : "Hans"}...`}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          disabled={isTyping}
-          className="flex-1 bg-slate-900 border border-slate-800 text-xs px-3.5 py-2.5 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 transition"
-        />
-        <button
-          type="submit"
-          disabled={!input.trim() || isTyping}
-          className="bg-violet-600 hover:bg-violet-500 active:scale-95 text-white p-2.5 rounded-xl shadow transition disabled:opacity-40 pointer-events-auto cursor-pointer select-none"
-        >
-          <Send className="w-4 h-4" />
-        </button>
-      </form>
-    </div>
+      <style>{`
+        @keyframes floatPulse {
+          0%, 100% { transform: translateY(0px); box-shadow: 0 20px 60px rgba(109,40,217,0.5); }
+          50% { transform: translateY(-4px); box-shadow: 0 28px 70px rgba(109,40,217,0.65); }
+        }
+      `}</style>
+    </>
   );
 }
