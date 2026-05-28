@@ -14,6 +14,7 @@ import KidiGaming from "./components/KidiGaming";
 import PrestigeAwards from "./components/PrestigeAwards";
 import PartnersSection from "./components/PartnersSection";
 import AboutUsSection from "./components/AboutUsSection";
+import Footer from "./components/Footer";
 import KidiStreamPlayer from "./components/KidiStreamPlayer";
 import confetti from "canvas-confetti";
 import { Challenge, Submission, Clue, UserProfile } from "./types";
@@ -2082,17 +2083,8 @@ export default function App() {
         </main>
       ) : null}
 
-      {/* Aesthetic human literal clean footer */}
-      <footer className="mt-16 border-t border-slate-900 py-8 text-center text-slate-500 text-[11px] font-mono leading-relaxed space-y-3">
-        <div>
-          KIDIWORLD — Une plateforme d'incubation créative développée en partenariat exclusif avec LinkYourArt. <br />
-          Dénichons et stimulons ensemble l'émergence de tous les talents de demain : cinéma, écriture, musique originale, stylisme de mode, graphisme, dessins, jeux vidéo et photographie !
-        </div>
-        <div className="text-[10px] text-slate-600 border-t border-slate-900/40 pt-3 max-w-xl mx-auto space-y-1">
-          <p>⚖️ <strong>Mentions Légales :</strong> Il est expressément mentionné que <strong>KIDI WORLD</strong> est une entité de <strong>LINKYOURART</strong> et est donc son entière propriété.</p>
-          <p className="text-slate-700">⚖️ <strong>Legal Notice :</strong> It is explicitly stated that <strong>KIDI WORLD</strong> is an entity of <strong>LINKYOURART</strong> and is therefore its entire property.</p>
-        </div>
-      </footer>
+      {/* Footer */}
+      <Footer language={profile.language} />
 
       {/* GLOBAL HIGH-INDEX ONBOARDING WELCOME MODAL OVERLAY */}
       {isTutorialOpen && (
