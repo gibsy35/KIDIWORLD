@@ -296,7 +296,7 @@ export default function AICreativeCoach({
           </div>
 
           {/* Messages */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-950/60 font-sans">
+          <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-950/60 font-sans">
             {messages.map((msg, index) => (
               <div key={index} className={`flex gap-2.5 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                 {msg.role === "coach" && (
@@ -331,6 +331,7 @@ export default function AICreativeCoach({
                 </div>
               </div>
             )}
+            <div ref={scrollRef} />
           </div>
 
           {/* Smart questions */}
@@ -347,7 +348,7 @@ export default function AICreativeCoach({
           </div>
 
           {/* Input */}
-          <form onSubmit={handleSend} className="px-3 py-3 bg-slate-950/80 border-t border-slate-800/60 flex gap-2 shrink-0">
+          <form onSubmit={handleSendMessage} className="px-3 py-3 bg-slate-950/80 border-t border-slate-800/60 flex gap-2 shrink-0">
             <input
               type="text"
               value={input}
