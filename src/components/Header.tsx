@@ -1,5 +1,31 @@
 import React from 'react';
 import { Award, HelpCircle, Shield, Languages, Coins } from 'lucide-react';
+import { useState, useEffect } from 'react';
+
+// ─── AI Status Badge ────────────────────────────────────────────────────────
+function AIStatusBadge() {
+  const [status, setStatus] = useState<"checking" | "live" | "simulation">("checking");
+
+  useEffect(() => {
+    fetch("/api/gemini/health")
+      .then(r => r.json())
+      .then(d => setStatus(d.mode?.includes("Live") ? "live" : "simulation"))
+      .catch(() => setStatus("simulation"));
+  }, []);
+
+  if (status === "checking") return null;
+
+  return (
+    <div className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl border font-mono text-[9.5px] font-bold ${
+      status === "live"
+        ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+        : "bg-amber-500/10 border-amber-500/20 text-amber-400"
+    }`}>
+      <span className={`w-1.5 h-1.5 rounded-full ${status === "live" ? "bg-emerald-400 animate-pulse" : "bg-amber-400"}`} />
+      {status === "live" ? "🤖 IA Live" : "🤖 IA Sim"}
+    </div>
+  );
+}
 
 interface HeaderProps {
   starsCount: number;
@@ -127,6 +153,9 @@ export default function Header({
               <strong className="text-amber-300 font-bold">{kidiCoins}</strong>
             </div>
           )}
+
+          {/* AI Status indicator */}
+          <AIStatusBadge />
         </div>
       </div>
     </header>

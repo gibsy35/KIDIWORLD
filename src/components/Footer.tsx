@@ -115,6 +115,104 @@ const T = {
   },
 };
 
+// ─── Functional Contact Form ───────────────────────────────────────────────
+function ContactForm({ language }: { language: "fr" | "en" }) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [type, setType] = useState("contact");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [feedback, setFeedback] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !message) return;
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/gemini/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message, type }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setStatus("success");
+        setFeedback(data.message);
+        setName(""); setEmail(""); setMessage(""); setType("contact");
+      } else {
+        setStatus("error");
+        setFeedback(language === "fr" ? "Une erreur s'est produite. Réessaie !" : "Something went wrong. Try again!");
+      }
+    } catch {
+      setStatus("error");
+      setFeedback(language === "fr" ? "Erreur réseau. Réessaie dans un instant." : "Network error. Try again shortly.");
+    }
+    setTimeout(() => setStatus("idle"), 6000);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-3">
+      <div className="grid grid-cols-2 gap-3">
+        <input
+          value={name}
+          onChange={e => setName(e.target.value)}
+          placeholder={language === "fr" ? "Ton prénom" : "Your name"}
+          className="bg-slate-800/60 border border-slate-700/60 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-teal-500/50 transition col-span-1"
+        />
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder={language === "fr" ? "Email *" : "Email *"}
+          className="bg-slate-800/60 border border-slate-700/60 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-teal-500/50 transition col-span-1"
+        />
+      </div>
+      <select
+        value={type}
+        onChange={e => setType(e.target.value)}
+        className="w-full bg-slate-800/60 border border-slate-700/60 rounded-xl px-3 py-2 text-xs text-slate-300 outline-none focus:border-teal-500/50 transition"
+      >
+        <option value="contact">{language === "fr" ? "💬 Question générale" : "💬 General question"}</option>
+        <option value="partenariat">{language === "fr" ? "🤝 Partenariat / Jury" : "🤝 Partnership / Jury"}</option>
+        <option value="presse">{language === "fr" ? "📰 Presse & Médias" : "📰 Press & Media"}</option>
+        <option value="bug">{language === "fr" ? "🐛 Signaler un bug" : "🐛 Report a bug"}</option>
+        <option value="parental">{language === "fr" ? "👨‍👩‍👧 Contrôle parental" : "👨‍👩‍👧 Parental control"}</option>
+      </select>
+      <textarea
+        required
+        value={message}
+        onChange={e => setMessage(e.target.value)}
+        rows={3}
+        placeholder={language === "fr" ? "Ton message... *" : "Your message... *"}
+        className="w-full bg-slate-800/60 border border-slate-700/60 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 outline-none focus:border-teal-500/50 transition resize-none"
+      />
+      {status === "success" && (
+        <div className="text-[11px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-3 py-2">
+          ✅ {feedback}
+        </div>
+      )}
+      {status === "error" && (
+        <div className="text-[11px] text-rose-400 bg-rose-500/10 border border-rose-500/20 rounded-xl px-3 py-2">
+          ❌ {feedback}
+        </div>
+      )}
+      <button
+        type="submit"
+        disabled={status === "sending" || !email || !message}
+        className="w-full py-2.5 rounded-xl bg-gradient-to-r from-teal-600 to-indigo-600 hover:from-teal-500 hover:to-indigo-500 disabled:opacity-40 text-white text-xs font-black transition active:scale-95 flex items-center justify-center gap-2"
+      >
+        {status === "sending" ? (
+          <><span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />{language === "fr" ? "Envoi..." : "Sending..."}</>
+        ) : (
+          <><ExternalLink className="w-3.5 h-3.5" />{language === "fr" ? "Envoyer le message 🚀" : "Send message 🚀"}</>
+        )}
+      </button>
+    </form>
+  );
+}
+
+// ─── Main Footer Component ──────────────────────────────────────────────────
 export default function Footer({ language }: FooterProps) {
   const t = T[language] || T.fr;
   const [legalExpanded, setLegalExpanded] = useState(false);
@@ -274,6 +372,16 @@ export default function Footer({ language }: FooterProps) {
               </ul>
             </div>
           </div>
+        </div>
+
+        {/* Contact form */}
+        <div className="mt-8 bg-gradient-to-br from-slate-900 via-slate-950 to-indigo-950/30 border border-slate-800/60 rounded-2xl p-6">
+          <h4 className="text-sm font-black text-white mb-1 flex items-center gap-2">
+            <Mail className="w-4 h-4 text-teal-400" />
+            {language === "fr" ? "Nous contacter" : "Contact us"}
+          </h4>
+          <p className="text-[10.5px] text-slate-500 mb-4">{language === "fr" ? "Une question, un partenariat, un projet ? Écris-nous !" : "A question, a partnership, a project? Write to us!"}</p>
+          <ContactForm language={language} />
         </div>
 
         {/* Expandable legal block */}

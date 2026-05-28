@@ -155,6 +155,7 @@ export default function AICreativeCoach({
         body: JSON.stringify({
           prompt: userText,
           context,
+          coachType: activeCoach,
           history: messages.slice(-10).map((m) => ({
             role: m.role === "user" ? "user" : "model",
             text: m.text,
