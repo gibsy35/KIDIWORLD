@@ -560,6 +560,7 @@ export default function App() {
     return dismissed !== "true";
   });
   const [tutorialStep, setTutorialStep] = useState(1);
+  const [tutorialLang, setTutorialLang] = useState<"fr" | "en">("fr");
 
   // Account Session for KidiClub & KidiCoins Wallet with LocalStorage persistence
   const [accountSession, setAccountSession] = useState<AccountSession>(() => {
@@ -2085,358 +2086,366 @@ export default function App() {
         draftCostume={draftCostume}
       />
 
-      {/* GLOBAL HIGH-INDEX ONBOARDING WELCOME MODAL OVERLAY */}
-      {isTutorialOpen && (
-        <div 
-          id="tutorial-modal-overlay" 
-          className="fixed inset-0 bg-slate-950/95 backdrop-blur-3xl flex justify-center items-center z-[9999] p-4 md:p-8 animate-fadeIn"
-          style={{ cursor: "zoom-out" }}
-          onClick={(e) => {
-            if ((e.target as HTMLElement).id === "tutorial-modal-overlay") {
-              localStorage.setItem("kidiworld_welcome_tutorial_dismissed", "true");
-              setIsTutorialOpen(false);
-            }
-          }}
-        >
-          {/* Animated Ambient background halos to look insanely grandiose */}
-          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-indigo-505/10 rounded-full blur-[140px] pointer-events-none animate-pulse" style={{ animationDuration: "10s" }} />
-          <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse" style={{ animationDuration: "8s" }} />
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      {/* TUTORIAL MODAL — 5 étapes bilingue FR/EN                       */}
+      {/* ═══════════════════════════════════════════════════════════════ */}
+      {isTutorialOpen && (() => {
+        const tl = tutorialLang;
+        const TOTAL_STEPS = 5;
 
-          <div 
-            className="relative w-full max-w-4xl max-h-[92vh] bg-slate-950/90 backdrop-blur-md border border-amber-550/30 rounded-[2.5rem] overflow-y-auto shadow-[0_0_100px_rgba(245,158,11,0.22)] flex flex-col md:flex-row transition-all duration-500 scrollbar-thin scrollbar-thumb-slate-800"
-            style={{ cursor: "default" }}
+        const T = {
+          fr: {
+            badge: "Guide Interactif",
+            title: "KIDIWORLD",
+            sub: "L'incubateur de talents créatifs pour les 4–18 ans",
+            desc: "Une plateforme 100% sécurisée où les jeunes créent, soumettent leurs œuvres à de vrais jurys professionnels, et gagnent des récompenses.",
+            profile: "Ton Profil",
+            labelName: "Nom",
+            labelRole: "Rôle",
+            labelStars: "Étoiles",
+            labelCoins: "KidiCoins",
+            roleArtist: "Jeune Artiste",
+            roleJury: "Comité Jury",
+            by: "Propulsé par",
+            stepLabel: "Étape",
+            of: "sur",
+            close: "Fermer",
+            prev: "Précédent",
+            next: "Suivant",
+            start: "C'est parti ! 🚀",
+            tip: "💡 Fais une pause de 5 min toutes les 30 minutes !",
+            steps: [
+              {
+                emoji: "🌍", color: "amber",
+                title: "Qu'est-ce que KIDIWORLD ?",
+                intro: "KIDIWORLD est bien plus qu'une plateforme — c'est un vrai incubateur artistique pour les jeunes de 4 à 18 ans, soutenu par LinkYourArt.",
+                items: [
+                  { icon: "🎯", color: "amber", title: "Des Défis Artistiques Réels", desc: "Chaque mois, de nouveaux Challenges créatifs sont lancés dans 8 catégories : Cinéma, Musique, Design, 3D & Jeux, Photo, Architecture, TV Séries et Podcast. Des professionnels du secteur parraineraient chaque défi." },
+                  { icon: "🏆", color: "pink", title: "Un Jury Professionnel", desc: "Tes créations ne sont pas jugées par des algorithmes — elles sont évaluées par de vrais experts : réalisateurs, compositeurs, designers, photographes. Tu reçois des retours constructifs et bienveillants." },
+                  { icon: "🔒", color: "indigo", title: "Sécurisé & Sans Pub", desc: "Zéro publicité, zéro tracking, zéro achat forcé. KIDIWORLD est un espace de création pure, conforme RGPD, avec contrôle parental intégré." },
+                ]
+              },
+              {
+                emoji: "🗺️", color: "indigo",
+                title: "Comment naviguer sur KIDIWORLD ?",
+                intro: "La plateforme est organisée en onglets. Voici comment t'y retrouver facilement :",
+                items: [
+                  { icon: "🔍", color: "indigo", title: "Onglet Explorer — Le cœur des Défis", desc: "C'est ici que tout commence. Tu découvres tous les challenges actifs, tu filtres par catégorie (multi-sélection), et tu cliques sur un défi pour voir ses indices, ses récompenses et y participer." },
+                  { icon: "🎮", color: "violet", title: "Onglet KidiGaming — Ton Espace de Création", desc: "Ton atelier personnel. Tu y écris ton scénario, composes ta musique, dessines ton costume. Tout est sauvegardé automatiquement. Tu peux créer plusieurs projets en parallèle." },
+                  { icon: "📺", color: "teal", title: "Onglet KidiStream — La Galerie", desc: "Découvre les œuvres des autres jeunes talents du monde entier. Like, commente, et inspire-toi. Les meilleures créations sont mises en avant chaque semaine." },
+                ]
+              },
+              {
+                emoji: "🎨", color: "pink",
+                title: "Participer à un Défi — Étape par Étape",
+                intro: "Voici comment fonctionne un challenge KIDIWORLD de A à Z :",
+                items: [
+                  { icon: "1️⃣", color: "amber", title: "Choisis ton Défi dans l'Explorer", desc: "Filtre par catégorie artistique, lis le brief du défi, découvre qui le parraine (ex: un réalisateur, un compositeur) et les récompenses à gagner. Clique sur ▶ Participer." },
+                  { icon: "2️⃣", color: "pink", title: "Débloque les Indices Jour par Jour", desc: "Chaque défi révèle des indices progressifs. Un nouvel indice se débloque chaque jour — cela t'aide à construire ton projet étape par étape, comme un vrai professionnel." },
+                  { icon: "3️⃣", color: "indigo", title: "Crée dans ton Workspace & Soumets", desc: "Utilise l'éditeur de scénario, le studio musical ou le tableau de dessin pour créer. Quand tu es prêt, clique sur 🚀 Soumettre. Ton œuvre part au jury !" },
+                ]
+              },
+              {
+                emoji: "🤖", color: "violet",
+                title: "Linky — Ton Coach IA Personnel",
+                intro: "Le bouton violet en bas à droite de l'écran ouvre le chat avec Linky, ton mentor IA disponible 24h/24.",
+                items: [
+                  { icon: "🪐", color: "violet", title: "Linky — Coach Créatif", desc: "Pose-lui n'importe quelle question sur ton projet : comment commencer, comment structurer ton histoire, comment améliorer ta mélodie. Il répond avec bienveillance et encouragements." },
+                  { icon: "🎬", color: "amber", title: "Jérôme Salle — Parrain Cinéma", desc: "Passe en mode Jérôme pour des conseils de réalisateur pro : cadrage, rythme narratif, dialogues percutants, construction de l'acte 1." },
+                  { icon: "🎹", color: "pink", title: "Hans Zimmer — Parrain Musique", desc: "Passe en mode Hans pour des conseils de compositeur légendaire : atmosphères sonores, émotions musicales, leitmotivs, orchestration simple." },
+                ]
+              },
+              {
+                emoji: "⭐", color: "teal",
+                title: "Récompenses, Étoiles & KidiCoins",
+                intro: "KIDIWORLD récompense chaque effort. Plus tu crées, plus tu progresses !",
+                items: [
+                  { icon: "⭐", color: "amber", title: "Étoiles — Ton Score de Progression", desc: "Chaque projet soumis, chaque feedback reçu, chaque défi complété te rapporte des étoiles. Les étoiles définissent ton rang dans le classement global KIDIWORLD." },
+                  { icon: "💰", color: "teal", title: "KidiCoins — Ta Monnaie Créative", desc: "Les KidiCoins récompensent tes actions : soumettre un projet, aider un pair, décrocher un top jury... Ils seront échangeables contre des récompenses exclusives." },
+                  { icon: "🎓", color: "indigo", title: "Badges & Titres Honorifiques", desc: "Deviens \"Novice Cinéaste\", \"Grand Virtuose\" ou \"Master Scénario\" selon tes accomplissements. Chaque badge est une vraie reconnaissance de ton talent par nos experts." },
+                ]
+              },
+            ]
+          },
+          en: {
+            badge: "Interactive Guide",
+            title: "KIDIWORLD",
+            sub: "The creative talent incubator for ages 4–18",
+            desc: "A 100% secure platform where young people create, submit their works to real professional juries, and earn rewards.",
+            profile: "Your Profile",
+            labelName: "Name",
+            labelRole: "Role",
+            labelStars: "Stars",
+            labelCoins: "KidiCoins",
+            roleArtist: "Young Artist",
+            roleJury: "Jury Committee",
+            by: "Powered by",
+            stepLabel: "Step",
+            of: "of",
+            close: "Close",
+            prev: "Previous",
+            next: "Next",
+            start: "Let's go! 🚀",
+            tip: "💡 Take a 5-min break every 30 minutes!",
+            steps: [
+              {
+                emoji: "🌍", color: "amber",
+                title: "What is KIDIWORLD?",
+                intro: "KIDIWORLD is more than a platform — it's a real artistic incubator for young people aged 4 to 18, supported by LinkYourArt.",
+                items: [
+                  { icon: "🎯", color: "amber", title: "Real Artistic Challenges", desc: "Every month, new creative challenges launch across 8 categories: Cinema, Music, Design, 3D & Games, Photography, Architecture, TV Series and Podcast. Industry professionals sponsor each challenge." },
+                  { icon: "🏆", color: "pink", title: "A Professional Jury", desc: "Your creations aren't judged by algorithms — they're evaluated by real experts: directors, composers, designers, photographers. You receive constructive and encouraging feedback." },
+                  { icon: "🔒", color: "indigo", title: "Safe & Ad-Free", desc: "Zero ads, zero tracking, zero forced purchases. KIDIWORLD is a pure creative space, GDPR compliant, with built-in parental controls." },
+                ]
+              },
+              {
+                emoji: "🗺️", color: "indigo",
+                title: "How to navigate KIDIWORLD?",
+                intro: "The platform is organized into tabs. Here's how to find your way around:",
+                items: [
+                  { icon: "🔍", color: "indigo", title: "Explorer Tab — The Challenge Hub", desc: "This is where it all starts. Discover all active challenges, filter by category (multi-select), and click a challenge to see its clues, rewards and how to participate." },
+                  { icon: "🎮", color: "violet", title: "KidiGaming Tab — Your Creative Space", desc: "Your personal workshop. Write your screenplay, compose your music, draw your costume. Everything auto-saves. You can run multiple projects in parallel." },
+                  { icon: "📺", color: "teal", title: "KidiStream Tab — The Gallery", desc: "Discover works from other young talents worldwide. Like, comment, get inspired. The best creations are featured every week." },
+                ]
+              },
+              {
+                emoji: "🎨", color: "pink",
+                title: "How to Join a Challenge — Step by Step",
+                intro: "Here's how a KIDIWORLD challenge works from start to finish:",
+                items: [
+                  { icon: "1️⃣", color: "amber", title: "Pick your Challenge in the Explorer", desc: "Filter by artistic category, read the challenge brief, discover who sponsors it (e.g. a director, composer) and the rewards at stake. Click ▶ Join." },
+                  { icon: "2️⃣", color: "pink", title: "Unlock Clues Day by Day", desc: "Each challenge reveals progressive clues. A new clue unlocks each day — helping you build your project step by step, just like a real professional." },
+                  { icon: "3️⃣", color: "indigo", title: "Create in your Workspace & Submit", desc: "Use the screenplay editor, music studio or drawing board to create. When you're ready, click 🚀 Submit. Your work goes to the jury!" },
+                ]
+              },
+              {
+                emoji: "🤖", color: "violet",
+                title: "Linky — Your Personal AI Coach",
+                intro: "The purple button at the bottom right of your screen opens chat with Linky, your AI mentor available 24/7.",
+                items: [
+                  { icon: "🪐", color: "violet", title: "Linky — Creative Coach", desc: "Ask anything about your project: how to start, how to structure your story, how to improve your melody. Linky replies with kindness and encouragement." },
+                  { icon: "🎬", color: "amber", title: "Jérôme Salle — Cinema Mentor", desc: "Switch to Jérôme for pro director advice: framing, narrative pacing, punchy dialogue, building act 1." },
+                  { icon: "🎹", color: "pink", title: "Hans Zimmer — Music Mentor", desc: "Switch to Hans for legendary composer advice: soundscapes, musical emotions, leitmotifs, simple orchestration." },
+                ]
+              },
+              {
+                emoji: "⭐", color: "teal",
+                title: "Rewards, Stars & KidiCoins",
+                intro: "KIDIWORLD rewards every effort. The more you create, the more you grow!",
+                items: [
+                  { icon: "⭐", color: "amber", title: "Stars — Your Progress Score", desc: "Every submitted project, received feedback, and completed challenge earns you stars. Stars define your rank in the global KIDIWORLD leaderboard." },
+                  { icon: "💰", color: "teal", title: "KidiCoins — Your Creative Currency", desc: "KidiCoins reward your actions: submitting a project, helping a peer, hitting the top jury... They'll be redeemable for exclusive rewards." },
+                  { icon: "🎓", color: "indigo", title: "Badges & Honorary Titles", desc: "Become a 'Novice Filmmaker', 'Grand Virtuoso' or 'Screenplay Master' based on your achievements. Each badge is genuine recognition of your talent by our experts." },
+                ]
+              },
+            ]
+          }
+        };
+
+        const t = T[tl];
+        const step = t.steps[tutorialStep - 1];
+        const colorMap: Record<string, string> = {
+          amber: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+          pink: "text-pink-400 bg-pink-500/10 border-pink-500/20",
+          indigo: "text-indigo-400 bg-indigo-500/10 border-indigo-500/20",
+          violet: "text-violet-400 bg-violet-500/10 border-violet-500/20",
+          teal: "text-teal-400 bg-teal-500/10 border-teal-500/20",
+        };
+        const barColors = ["bg-amber-500", "bg-indigo-500", "bg-pink-500", "bg-violet-500", "bg-teal-500"];
+
+        return (
+          <div
+            id="tutorial-modal-overlay"
+            className="fixed inset-0 bg-slate-950/95 backdrop-blur-3xl flex justify-center items-center z-[9999] p-3 md:p-6 animate-fadeIn"
+            onClick={(e) => {
+              if ((e.target as HTMLElement).id === "tutorial-modal-overlay") {
+                localStorage.setItem("kidiworld_welcome_tutorial_dismissed", "true");
+                setIsTutorialOpen(false);
+              }
+            }}
           >
-            
-            {/* Top glowing kinetic neon bar */}
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-400 via-pink-500 to-indigo-500 z-10" />
+            {/* Ambient glows */}
+            <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-indigo-500/8 rounded-full blur-[140px] pointer-events-none animate-pulse" style={{ animationDuration: "10s" }} />
+            <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-amber-500/8 rounded-full blur-[120px] pointer-events-none animate-pulse" style={{ animationDuration: "8s" }} />
 
-            {/* LEFT PROFILE EMBLEM BLOCK (COSMIC RADAR STATUS) */}
-            <div className="w-full md:w-[290px] bg-slate-900/30 p-6 md:p-8 flex flex-col justify-between border-b md:border-b-0 md:border-r border-slate-900 shrink-0 relative overflow-hidden">
-              {/* Internal glow accents */}
-              <div className="absolute -left-12 -top-12 w-44 h-44 rounded-full bg-indigo-500/10 blur-3xl" />
-              <div className="absolute -right-12 -bottom-12 w-44 h-44 rounded-full bg-amber-500/10 blur-3xl" />
+            <div
+              className="relative w-full max-w-4xl max-h-[94vh] bg-slate-950 border border-slate-800/60 rounded-[2rem] overflow-hidden shadow-[0_0_100px_rgba(245,158,11,0.15)] flex flex-col md:flex-row"
+              onClick={e => e.stopPropagation()}
+            >
+              {/* Top gradient bar */}
+              <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-pink-500 to-indigo-500 z-10 transition-all duration-500`} />
 
-              <div className="space-y-6 relative z-10 text-left">
-                <div className="space-y-2">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/10 border border-amber-500/25 text-amber-400 text-[9px] font-black uppercase tracking-widest rounded-full">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
-                    Creative Hub
+              {/* ── LEFT PANEL ─────────────────────────────────────────── */}
+              <div className="w-full md:w-72 bg-slate-900/50 border-b md:border-b-0 md:border-r border-slate-800/60 p-6 flex flex-col justify-between shrink-0 relative overflow-hidden">
+                <div className="absolute -left-10 -top-10 w-40 h-40 bg-indigo-500/8 rounded-full blur-3xl" />
+                <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-amber-500/8 rounded-full blur-3xl" />
+
+                <div className="space-y-5 relative z-10">
+                  {/* Logo */}
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 via-orange-500 to-pink-600 flex items-center justify-center shadow-lg shrink-0">
+                      <span className="text-slate-950 font-black text-[13px]" style={{ letterSpacing: '-0.05em' }}>KW</span>
+                    </div>
+                    <div>
+                      <div className="text-lg font-black">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">KIDI</span>
+                        <span className="text-white">WORLD</span>
+                      </div>
+                      <div className="text-[9px] text-slate-500 font-mono uppercase">{t.by} LinkYourArt</div>
+                    </div>
                   </div>
-                  <h3 className="text-2xl font-black text-white tracking-tight leading-none">
-                    KIDI<span className="text-amber-400">WORLD</span>
-                  </h3>
-                  <p className="text-[10.5px] text-slate-400 font-bold leading-relaxed">
-                    L'incubateur de talents artistiques pour les créateurs de 4 à 18 ans !
-                  </p>
+
+                  {/* Badge + desc */}
+                  <div className="space-y-2">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[9px] font-black uppercase tracking-widest rounded-full">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
+                      {t.badge}
+                    </span>
+                    <p className="text-[11px] text-slate-400 leading-relaxed">{t.desc}</p>
+                  </div>
+
+                  {/* Lang switcher */}
+                  <div className="space-y-2">
+                    <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold font-mono block">🌍 Langue / Language</span>
+                    <div className="flex gap-2">
+                      {(["fr", "en"] as const).map(lang => (
+                        <button
+                          key={lang}
+                          onClick={() => setTutorialLang(lang)}
+                          className={`flex-1 py-2 rounded-xl text-xs font-black transition border ${
+                            tutorialLang === lang
+                              ? "bg-amber-500 text-slate-950 border-amber-400 shadow-md"
+                              : "bg-slate-800 text-slate-400 border-slate-700 hover:text-white"
+                          }`}
+                        >
+                          {lang === "fr" ? "🇫🇷 Français" : "🇬🇧 English"}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Profile */}
+                  <div className="space-y-2 pt-3 border-t border-slate-800/60">
+                    <span className="text-[9px] text-slate-500 uppercase tracking-widest font-bold font-mono">{t.profile}</span>
+                    {[
+                      { label: t.labelName, value: profile.childName, icon: "👤" },
+                      { label: t.labelRole, value: role === "jury" ? t.roleJury : t.roleArtist, icon: "🎭" },
+                      { label: t.labelStars, value: `${statsStars} ⭐`, icon: "⭐" },
+                      { label: t.labelCoins, value: `${accountSession.kidiCoins} 💰`, icon: "💰" },
+                    ].map(item => (
+                      <div key={item.label} className="flex items-center justify-between bg-slate-950/60 border border-slate-800/40 rounded-xl px-3 py-2">
+                        <span className="text-[10px] text-slate-500 flex items-center gap-1.5">{item.icon} {item.label}</span>
+                        <span className="text-[10px] font-black text-white">{item.value}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Step dots navigation */}
+                  <div className="flex items-center gap-1.5 pt-2">
+                    {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setTutorialStep(i + 1)}
+                        className={`transition-all duration-300 rounded-full ${
+                          i + 1 === tutorialStep
+                            ? `w-6 h-2 ${barColors[i]}`
+                            : i + 1 < tutorialStep
+                            ? `w-2 h-2 ${barColors[i]} opacity-60`
+                            : "w-2 h-2 bg-slate-700"
+                        }`}
+                      />
+                    ))}
+                  </div>
                 </div>
 
-                {/* Integration Details card */}
-                <div className="space-y-3 pt-4 border-t border-slate-900">
-                  <span className="text-[9px] font-bold text-slate-500 uppercase tracking-wider font-mono block">Ton Profil Actif :</span>
-                  
-                  {/* Participant Card */}
-                  <div className="p-3 bg-slate-950/60 border border-slate-900/60 rounded-xl flex items-center justify-between">
-                    <span className="text-[10px] text-slate-400 font-semibold flex items-center gap-1.5">
-                      <Bot className="w-3.5 h-3.5 text-amber-500" /> Nom :
-                    </span>
-                    <span className="text-[10px] font-black text-white">
-                      {profile.childName}
-                    </span>
-                  </div>
-
-                  {/* Role Card */}
-                  <div className="p-3 bg-slate-950/60 border border-slate-900/60 rounded-xl flex items-center justify-between">
-                    <span className="text-[10px] text-slate-400 font-semibold flex items-center gap-1.5">
-                      <Users className="w-3.5 h-3.5 text-indigo-450" /> Rôle :
-                    </span>
-                    <span className={`text-[10px] font-black px-2 py-0.5 rounded-lg border ${
-                      role === "jury"
-                        ? "bg-pink-500/10 border-pink-500/25 text-pink-400"
-                        : "bg-amber-500/10 border-amber-500/25 text-amber-400"
-                    }`}>
-                      {role === "jury" ? "Comité Jury" : "Jeune Artiste"}
-                    </span>
-                  </div>
-
-                  {/* Stars Card */}
-                  <div className="p-3 bg-slate-950/60 border border-slate-900/60 rounded-xl flex items-center justify-between">
-                    <span className="text-[10px] text-slate-400 font-semibold flex items-center gap-1.5">
-                      <Award className="w-3.5 h-3.5 text-amber-500" /> Palmarès :
-                    </span>
-                    <span className="text-[10px] font-black text-white font-mono flex items-center gap-1">
-                      {statsStars} Étoiles ⭐
-                    </span>
-                  </div>
-
-                  {/* Coins Card */}
-                  <div className="p-3 bg-slate-950/60 border border-slate-900/60 rounded-xl flex items-center justify-between">
-                    <span className="text-[10px] text-slate-400 font-semibold flex items-center gap-1.5">
-                      <Coins className="w-3.5 h-3.5 text-amber-500" /> KidiCoins :
-                    </span>
-                    <span className="text-[10px] font-black text-amber-400 font-mono">
-                      {accountSession.kidiCoins} Coins 💰
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Sidebar Footer brand-note */}
-              <div className="pt-6 border-t border-slate-900/60 mt-6 md:mt-0 relative z-10 text-left">
-                <p className="text-[9.5px] text-slate-500 leading-normal font-semibold">
-                  Soutenu par <strong className="text-slate-400 font-bold">LinkYourArt</strong>, incubateur mondial de l'excellence artistique.
+                <p className="text-[9.5px] text-slate-600 leading-snug relative z-10 pt-4 border-t border-slate-800/40 mt-4">
+                  {t.by} <strong className="text-slate-500">LinkYourArt</strong> — incubateur mondial d'excellence artistique
                 </p>
               </div>
-            </div>
 
-            {/* RIGHT COLUMN: INTERACTIVE SLIDES SECTION */}
-            <div className="flex-1 p-6 md:p-8 flex flex-col justify-between space-y-6 bg-slate-950 text-left">
-              
-              {/* Stepper progress & header indicators */}
-              <div className="flex justify-between items-center pb-4 border-b border-slate-900">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold text-indigo-455 uppercase tracking-widest font-mono">
-                      GUIDE D'INITIATION DÉFI ARTISTIQUE
-                    </span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-slate-800" />
-                    <span className="text-[10px] font-semibold text-slate-400 font-mono">
-                      Étape {tutorialStep} sur 3
-                    </span>
+              {/* ── RIGHT PANEL ────────────────────────────────────────── */}
+              <div className="flex-1 flex flex-col overflow-hidden">
+                {/* Header */}
+                <div className="px-6 pt-6 pb-4 border-b border-slate-800/60 flex items-center justify-between shrink-0">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className={`text-[10px] font-black uppercase tracking-widest font-mono ${colorMap[step.color].split(' ')[0]}`}>
+                        {t.stepLabel} {tutorialStep} {t.of} {TOTAL_STEPS}
+                      </span>
+                    </div>
+                    {/* Progress bar */}
+                    <div className="w-32 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${barColors[tutorialStep - 1]}`}
+                        style={{ width: `${(tutorialStep / TOTAL_STEPS) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => { localStorage.setItem("kidiworld_welcome_tutorial_dismissed", "true"); setIsTutorialOpen(false); }}
+                    className="w-8 h-8 rounded-xl bg-slate-800 hover:bg-rose-500/80 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition text-sm font-bold"
+                  >✕</button>
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
+                  <div className="space-y-1">
+                    <h4 className="text-xl font-black text-white flex items-center gap-2 leading-tight">
+                      <span className="text-2xl">{step.emoji}</span>
+                      {step.title}
+                    </h4>
+                    <p className="text-[11.5px] text-slate-400 leading-relaxed">{step.intro}</p>
                   </div>
 
-                  {/* Progress sliding trace */}
-                  <div className="flex items-center gap-1 w-24 h-1 bg-slate-900 rounded-full overflow-hidden mt-1">
-                    <div 
-                      className={`h-full transition-all duration-500 rounded-full ${
-                        tutorialStep === 1 ? "w-1/3 bg-amber-500" : tutorialStep === 2 ? "w-2/3 bg-pink-500" : "w-full bg-indigo-500"
-                      }`}
-                    />
+                  <div className="space-y-3">
+                    {step.items.map((item, i) => (
+                      <div key={i} className={`p-4 rounded-2xl border bg-slate-900/40 hover:bg-slate-900/70 transition duration-200 flex gap-3 ${colorMap[item.color].split(' ').slice(1).join(' ')}`}>
+                        <div className={`w-10 h-10 rounded-xl border flex items-center justify-center text-lg shrink-0 ${colorMap[item.color]}`}>
+                          {item.icon}
+                        </div>
+                        <div className="space-y-1 min-w-0">
+                          <span className={`text-xs font-black block ${colorMap[item.color].split(' ')[0]}`}>{item.title}</span>
+                          <p className="text-[11px] text-slate-400 leading-relaxed">{item.desc}</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    localStorage.setItem("kidiworld_welcome_tutorial_dismissed", "true");
-                    setIsTutorialOpen(false);
-                  }}
-                  className="px-2.5 py-1 text-[10px] font-extrabold text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-lg transition"
-                >
-                  Fermer [×]
-                </button>
-              </div>
-
-              {/* Active tutorial content cards */}
-              <div className="flex-1 py-1">
-                {tutorialStep === 1 && (
-                  <div className="space-y-5 animate-fadeIn">
-                    <div className="space-y-1">
-                      <h4 className="text-lg font-black text-white flex items-center gap-2">
-                        <span>Étape 1 : Libère ton Génie Créatif !</span>
-                        <span className="text-amber-400">🎨</span>
-                      </h4>
-                      <p className="text-xs text-slate-400 font-semibold">
-                        Trois ateliers amusants pour écrire, dessiner et composer ton univers original :
-                      </p>
-                    </div>
-
-                    <div className="grid gap-3.5">
-                      {/* Sub-item Film Dialogue */}
-                      <div className="p-3 bg-slate-900/40 border border-slate-900/60 rounded-xl flex gap-3 hover:border-amber-500/20 hover:bg-slate-900/60 transition duration-300">
-                        <div className="p-2 bg-amber-500/10 text-amber-400 rounded-lg flex-shrink-0 border border-amber-500/20 h-9 w-9 flex items-center justify-center">
-                          <Film className="w-4 h-4" />
-                        </div>
-                        <div className="space-y-0.5">
-                          <span className="text-xs font-extrabold text-slate-200">Scénariste de Cinéma d'Animation 📜</span>
-                          <p className="text-[11px] text-slate-400 leading-relaxed font-semibold">
-                            Écris ton histoire ou utilise nos modèles d'aventure. Clique sur l'onglet <strong className="text-amber-400 font-bold">"🎬 Aperçu Cinéma"</strong> pour formater tes répliques automatiquement à la hollywoodienne, puis télécharge le PDF !
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Sub-item Canvas sketch */}
-                      <div className="p-3 bg-slate-900/40 border border-slate-900/60 rounded-xl flex gap-3 hover:border-pink-500/20 hover:bg-slate-900/60 transition duration-300">
-                        <div className="p-2 bg-pink-500/10 text-pink-400 rounded-lg flex-shrink-0 border border-pink-500/20 h-9 w-9 flex items-center justify-center">
-                          <PenTool className="w-4 h-4" />
-                        </div>
-                        <div className="space-y-0.5">
-                          <span className="text-xs font-extrabold text-slate-200">Dessinateur Galactique & Autocollants 🎨</span>
-                          <p className="text-[11px] text-slate-400 leading-relaxed font-semibold">
-                            Peins avec le pinceau laser ou efface d'un trait. Amuse-toi avec les <strong className="text-pink-400 font-bold">Tampons Stellaires</strong> : sélectionne un emoji rigolo pour dessiner des tampons géants en couleur !
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Sub-item Music track */}
-                      <div className="p-3 bg-slate-900/40 border border-slate-900/60 rounded-xl flex gap-3 hover:border-indigo-500/20 hover:bg-slate-900/60 transition duration-300">
-                        <div className="p-2 bg-indigo-500/10 text-indigo-400 rounded-lg flex-shrink-0 border border-indigo-500/20 h-9 w-9 flex items-center justify-center">
-                          <Volume2 className="w-4 h-4" />
-                        </div>
-                        <div className="space-y-0.5">
-                          <span className="text-xs font-extrabold text-slate-200">Compositeur Symphonique & Rythmes 🎵</span>
-                          <p className="text-[11px] text-slate-400 leading-relaxed font-semibold">
-                            Imagine une bande-son rétro-gaming, rythme tes percussions stellaires et joue sur le synthétiseur spatial pour donner du relief sonore à tes histoires d'animation.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
+                {/* Footer nav */}
+                <div className="px-6 py-4 border-t border-slate-800/60 flex items-center justify-between gap-3 shrink-0 bg-slate-950/60">
+                  <span className="text-[10px] text-slate-600 italic hidden sm:block">{t.tip}</span>
+                  <div className="flex gap-2 ml-auto">
+                    {tutorialStep > 1 && (
+                      <button
+                        onClick={() => setTutorialStep(p => p - 1)}
+                        className="flex items-center gap-1.5 px-4 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 hover:text-white font-bold text-xs rounded-xl transition"
+                      >
+                        ← {t.prev}
+                      </button>
+                    )}
+                    {tutorialStep < TOTAL_STEPS ? (
+                      <button
+                        onClick={() => setTutorialStep(p => p + 1)}
+                        className={`flex items-center gap-1.5 px-5 py-2.5 font-black text-xs rounded-xl transition shadow-lg ${colorMap[step.color]} border`}
+                      >
+                        {t.next} →
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => { localStorage.setItem("kidiworld_welcome_tutorial_dismissed", "true"); setIsTutorialOpen(false); }}
+                        className="flex items-center gap-1.5 px-6 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-black text-xs rounded-xl shadow-lg transition active:scale-95"
+                      >
+                        {t.start}
+                      </button>
+                    )}
                   </div>
-                )}
-
-                {tutorialStep === 2 && (
-                  <div className="space-y-5 animate-fadeIn">
-                    <div className="space-y-1">
-                      <h4 className="text-lg font-black text-white flex items-center gap-2">
-                        <span>Étape 2 : Le Comité d'Évaluation de Jury Pro !</span>
-                        <span className="text-pink-400">🎬</span>
-                      </h4>
-                      <p className="text-xs text-slate-400 font-semibold">
-                        Fais analyser tes chefs-d'œuvre par des experts bienveillants de LinkYourArt pour progresser :
-                      </p>
-                    </div>
-
-                    <div className="grid gap-3.5">
-                      {/* Sub-item submitted works */}
-                      <div className="p-3 bg-slate-900/40 border border-slate-900/60 rounded-xl flex gap-3 hover:border-pink-500/20 hover:bg-slate-900/60 transition duration-300">
-                        <div className="p-2 bg-pink-500/10 text-pink-400 rounded-lg flex-shrink-0 border border-pink-500/20 h-9 w-9 flex items-center justify-center">
-                          <Award className="w-4 h-4" />
-                        </div>
-                        <div className="space-y-0.5">
-                          <span className="text-xs font-extrabold text-slate-200">Présente tes œuvres comme un Professionnel 🎭</span>
-                          <p className="text-[11px] text-slate-400 leading-relaxed font-semibold">
-                            Bascule vers l'espace <strong className="text-pink-400 font-bold">Comité Jury Pro</strong> pour évaluer tes créations et celles de tes paires avec les boutons de notation bienveillants.
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Sub-item recommendations feedback */}
-                      <div className="p-3 bg-slate-900/40 border border-slate-900/60 rounded-xl flex gap-3 hover:border-emerald-500/20 hover:bg-slate-900/60 transition duration-300">
-                        <div className="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg flex-shrink-0 border border-emerald-500/20 h-9 w-9 flex items-center justify-center">
-                          <Sparkles className="w-4 h-4" />
-                        </div>
-                        <div className="space-y-0.5">
-                          <span className="text-xs font-extrabold text-slate-200">Retours Chaleureux & Conseils Stimulants ❤️</span>
-                          <p className="text-[11px] text-slate-400 leading-relaxed font-semibold">
-                            Nos experts de l'animation te partagent de vrais secrets d'écriture, de la bienveillance constructive et des encouragements chaleureux pour t'améliorer sans pression.
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Sub-item stargift */}
-                      <div className="p-3 bg-slate-900/40 border border-slate-900/60 rounded-xl flex gap-3 hover:border-amber-500/20 hover:bg-slate-900/60 transition duration-300">
-                        <div className="p-2 bg-amber-500/10 text-amber-400 rounded-lg flex-shrink-0 border border-amber-500/20 h-9 w-9 flex items-center justify-center">
-                          <Coins className="w-4 h-4" />
-                        </div>
-                        <div className="space-y-0.5">
-                          <span className="text-xs font-extrabold text-slate-200">Gagne d'Inestimables KidiCoins 💰</span>
-                          <p className="text-[11px] text-slate-400 leading-relaxed font-semibold">
-                            Chaque correction constructive et chaque projet validé augmente ton score en étoiles et crédite ton portefeuille de KidiCoins récompensés.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {tutorialStep === 3 && (
-                  <div className="space-y-5 animate-fadeIn">
-                    <div className="space-y-1">
-                      <h4 className="text-lg font-black text-white flex items-center gap-2">
-                        <span>Étape 3 : Une Session Sécurisée & Équilibrée !</span>
-                        <span className="text-indigo-400">🛡️</span>
-                      </h4>
-                      <p className="text-xs text-slate-400 font-semibold">
-                        Le tableau de bord adulte KidiSafe assure la sérénité de toute la famille :
-                      </p>
-                    </div>
-
-                    <div className="grid gap-3.5">
-                      {/* Sub-item safe parental configuration controls info */}
-                      <div className="p-3 bg-slate-900/40 border border-slate-900/60 rounded-xl flex gap-3 hover:border-pink-500/20 hover:bg-slate-900/60 transition duration-300">
-                        <div className="p-2 bg-pink-500/10 text-pink-400 rounded-lg flex-shrink-0 border border-pink-500/20 h-9 w-9 flex items-center justify-center">
-                          <Shield className="w-4 h-4" />
-                        </div>
-                        <div className="space-y-0.5">
-                          <span className="text-xs font-extrabold text-slate-200">Contrôle Adulte Protégé KidiSafe 🔒</span>
-                          <p className="text-[11px] text-slate-400 leading-relaxed font-semibold">
-                            Entrez votre email de tuteur dans l'onglet de contrôle pour ajuster les limites intelligentes de temps d'écran hebdomadaire et superviser les projets en toute sérénité.
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Sub-item dynamic gauges screen life */}
-                      <div className="p-3 bg-slate-900/40 border border-slate-900/60 rounded-xl flex gap-3 hover:border-emerald-500/20 hover:bg-slate-900/60 transition duration-300">
-                        <div className="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg flex-shrink-0 border border-emerald-500/20 h-9 w-9 flex items-center justify-center">
-                          <Clock className="w-4 h-4" />
-                        </div>
-                        <div className="space-y-0.5">
-                          <span className="text-xs font-extrabold text-slate-200">Compteur de Temps Visuel Adaptatif ⏳</span>
-                          <p className="text-[11px] text-slate-400 leading-relaxed font-semibold">
-                            Une jauge chromatique glisse doucement du vert vif vers le rouge alarmant dans l'inspecteur pour aider les enfants à doser calmement l'exposition aux écrans.
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Sub-item custom options space language */}
-                      <div className="p-3 bg-slate-900/40 border border-slate-900/60 rounded-xl flex gap-3 hover:border-indigo-500/20 hover:bg-slate-900/60 transition duration-300">
-                        <div className="p-2 bg-indigo-500/10 text-indigo-400 rounded-lg flex-shrink-0 border border-indigo-500/20 h-9 w-9 flex items-center justify-center">
-                          <Globe className="w-4 h-4" />
-                        </div>
-                        <div className="space-y-0.5">
-                          <span className="text-xs font-extrabold text-slate-200">Choisis ta Langue de Travail 🌍</span>
-                          <p className="text-[11px] text-slate-400 leading-relaxed font-semibold">
-                            Apprends en t'amusant ! Bascule ton profil d'artiste à tout moment pour pratiquer l'anglais, l'espagnol, le japonais ou le français d'un simple geste.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Footer controls for steps */}
-              <div className="pt-4 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <span className="text-[10px] text-slate-500 font-semibold italic flex items-center gap-1">
-                  🍵 Pensez à faire une petite pause active toutes les 15 minutes !
-                </span>
-
-                <div className="flex gap-2.5 w-full sm:w-auto">
-                  {tutorialStep > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => setTutorialStep(prev => prev - 1)}
-                      className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white font-bold text-xs rounded-xl shadow transition cursor-pointer"
-                    >
-                      <ArrowLeft className="w-3.5 h-3.5" /> Précédent
-                    </button>
-                  )}
-
-                  {tutorialStep < 3 ? (
-                    <button
-                      type="button"
-                      onClick={() => setTutorialStep(prev => prev + 1)}
-                      className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-5 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white font-bold text-xs rounded-xl shadow transition cursor-pointer"
-                    >
-                      Suivant <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        localStorage.setItem("kidiworld_welcome_tutorial_dismissed", "true");
-                        setIsTutorialOpen(false);
-                      }}
-                      className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-6 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold text-xs rounded-xl shadow-lg transition transform active:scale-95 cursor-pointer"
-                    >
-                      C'est parti ! 🚀
-                    </button>
-                  )}
                 </div>
               </div>
-
             </div>
           </div>
-        </div>
+        );
+      })()}
       )}
     </div>
   );
