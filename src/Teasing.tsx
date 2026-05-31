@@ -158,21 +158,9 @@ export default function Teasing({ onAdminAccess }: { onAdminAccess: () => void }
         <div className="absolute top-[60%] left-[10%] w-[300px] h-[300px] rounded-full blur-[80px] animate-pulse"
           style={{ background: "radial-gradient(circle, rgba(6,182,212,0.10) 0%, transparent 70%)", animationDuration: "9s" }} />
 
-        {/* Grid overlay */}
-        <div className="absolute inset-0 opacity-[0.03]"
-          style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
-
-        {/* Floating stars */}
-        {[...Array(30)].map((_, i) => (
-          <div key={i} className="absolute rounded-full animate-pulse"
-            style={{
-              width: i % 3 === 0 ? "3px" : "1.5px", height: i % 3 === 0 ? "3px" : "1.5px",
-              left: `${3 + i * 3.2}%`, top: `${5 + ((i * 41) % 90)}%`,
-              background: ["#f59e0b","#ec4899","#8b5cf6","#06b6d4","#10b981"][i % 5],
-              animationDelay: `${i * 0.2}s`, animationDuration: `${2 + (i % 4)}s`,
-              opacity: 0.4 + (i % 3) * 0.2,
-            }} />
-        ))}
+        {/* Grid overlay — subtle depth */}
+        <div className="absolute inset-0 opacity-[0.015]"
+          style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)", backgroundSize: "80px 80px" }} />
       </div>
 
       {/* ── Top bar ─────────────────────────────────────────────── */}
@@ -319,7 +307,13 @@ export default function Teasing({ onAdminAccess }: { onAdminAccess: () => void }
 
         {/* Footer */}
         <div className="text-[10px] font-mono text-center space-y-1 pt-4 w-full" style={{ borderTop: "1px solid rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.2)" }}>
-          <p>© 2025-2026 KIDIWORLD — une entité de <strong style={{ color: "rgba(255,255,255,0.4)" }}>LINKYOURART SAS</strong></p>
+          <p>© 2025-2026 KIDIWORLD — une entité de{" "}
+            <a href="https://linkyourart.com" target="_blank" rel="noopener noreferrer"
+              className="transition hover:text-amber-400"
+              style={{ color: "rgba(255,255,255,0.4)", textDecoration: "underline", textUnderlineOffset: "3px" }}>
+              LINKYOURART SAS
+            </a>
+          </p>
           <p>Plateforme 100% Safe · Zéro Pub · RGPD Compliant · Protection des Mineurs</p>
         </div>
       </main>
