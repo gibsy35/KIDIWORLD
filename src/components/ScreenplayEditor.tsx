@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BookOpen, Sparkles, AlertCircle, Quote, Check, FileDown } from "lucide-react";
 import { jsPDF } from "jspdf";
+import { PLACEHOLDERS } from "../utils/ageAdapter";
 
 interface ScreenplayLine {
   type: "scene" | "character" | "parenthetical" | "dialogue" | "action" | "transition";
@@ -92,9 +93,11 @@ interface ScreenplayEditorProps {
   unlockedClues: string[];
   onSaveScreenplay: (act1: string, act2: string, act3: string, title: string) => void;
   savedScreenplay?: { act1: string; act2: string; act3: string; title: string };
+  ageGroup?: "4-7" | "8-11" | "12-15" | "16-18";
+  lang?: "fr" | "en";
 }
 
-export default function ScreenplayEditor({ unlockedClues, onSaveScreenplay, savedScreenplay }: ScreenplayEditorProps) {
+export default function ScreenplayEditor({ unlockedClues, onSaveScreenplay, savedScreenplay, ageGroup = "12-15", lang = "fr" }: ScreenplayEditorProps) {
   const [title, setTitle] = useState(savedScreenplay?.title || "");
   const [act1, setAct1] = useState(savedScreenplay?.act1 || "");
   const [act2, setAct2] = useState(savedScreenplay?.act2 || "");
@@ -543,7 +546,7 @@ export default function ScreenplayEditor({ unlockedClues, onSaveScreenplay, save
               <div className="min-h-[280px]">
                 {currentTab === "act1" && (
                   <textarea
-                    placeholder="Rédige l'Acte I... Introduis tes personnages et énonce la découverte du Harpon Cosmique."
+                    placeholder={PLACEHOLDERS.screenplay[ageGroup][lang]}
                     value={act1}
                     onChange={(e) => {
                       setAct1(e.target.value);

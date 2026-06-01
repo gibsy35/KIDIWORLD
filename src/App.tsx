@@ -18,6 +18,8 @@ import Footer from "./components/Footer";
 import KidiStreamPlayer from "./components/KidiStreamPlayer";
 import TutorialModal from "./components/TutorialModal";
 import { CGUPage, PrivacyPage, LegalNoticePage } from "./components/LegalPages";
+import AgeAdaptiveBanner from "./components/AgeAdaptiveBanner";
+import { getAgeGroup, getAgeTools, v, PLACEHOLDERS } from "./utils/ageAdapter";
 import confetti from "canvas-confetti";
 import { Challenge, Submission, Clue, UserProfile } from "./types";
 import { t } from "./utils/i18n";
@@ -637,6 +639,9 @@ export default function App() {
 
   // Get active challenge
   const challenge = challenges.find((c) => c.id === activeChallengeId) || challenges[0];
+  const ageGroup = getAgeGroup(profile.childAge);
+  const ageTools = getAgeTools(ageGroup);
+  const ageLang = (profile.language === "en" ? "en" : "fr") as "fr" | "en";
 
   // Youth drafts
   const [draftTitle, setDraftTitle] = useState("Le Berceau de la Constellation");
@@ -1840,7 +1845,15 @@ export default function App() {
 
           {activeTab === "workspace" && (
             <div className="space-y-6">
-              
+
+              {/* Age Adaptive Banner */}
+              <AgeAdaptiveBanner
+                age={profile.childAge}
+                lang={ageLang}
+                stars={statsStars}
+                coins={accountSession.kidiCoins}
+              />
+
               {/* Workspace Mini Banner showing Active Challenge & Category details with Real-time translate */}
               <div className="bg-slate-900/95 border border-slate-800/70 p-5 rounded-3xl text-left flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div className="space-y-1">
@@ -1885,9 +1898,9 @@ export default function App() {
                       }`}
                     >
                       <HelpCircle className="w-4 h-4 text-slate-400" />
-                      1. Guide du Challenge & Indices
+                      {v("workspace.guide.title", ageGroup, ageLang)}
                     </button>
-                    
+
                     <button
                       onClick={() => setActiveWorkspaceSubTab("screenplay")}
                       className={`flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold transition whitespace-nowrap ${
@@ -1895,28 +1908,32 @@ export default function App() {
                       }`}
                     >
                       <BookOpen className="w-4 h-4 text-amber-500" />
-                      2. Scénariste (Textes)
+                      {v("workspace.screenplay.title", ageGroup, ageLang)}
                     </button>
-                    
-                    <button
-                      onClick={() => setActiveWorkspaceSubTab("music")}
-                      className={`flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-                        activeWorkspaceSubTab === "music" ? "bg-slate-950 text-violet-400 border border-slate-900 shadow" : "text-slate-400 hover:text-slate-200"
-                      }`}
-                    >
-                      <Music className="w-4 h-4 text-violet-400" />
-                      3. Studio Sonore (Chanson)
-                    </button>
-                    
-                    <button
-                      onClick={() => setActiveWorkspaceSubTab("costume")}
-                      className={`flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-                        activeWorkspaceSubTab === "costume" ? "bg-slate-950 text-pink-400 border border-slate-900 shadow" : "text-slate-400 hover:text-slate-200"
-                      }`}
-                    >
-                      <Palette className="w-4 h-4 text-pink-400" />
-                      4. Dessin (Costumes d'Équipage)
-                    </button>
+
+                    {ageTools.showMusic && (
+                      <button
+                        onClick={() => setActiveWorkspaceSubTab("music")}
+                        className={`flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+                          activeWorkspaceSubTab === "music" ? "bg-slate-950 text-pink-400 border border-slate-900 shadow" : "text-slate-400 hover:text-slate-200"
+                        }`}
+                      >
+                        <Music className="w-4 h-4 text-pink-500" />
+                        {v("workspace.music.title", ageGroup, ageLang)}
+                      </button>
+                    )}
+
+                    {ageTools.showDesign && (
+                      <button
+                        onClick={() => setActiveWorkspaceSubTab("costume")}
+                        className={`flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+                          activeWorkspaceSubTab === "costume" ? "bg-slate-950 text-violet-400 border border-slate-900 shadow" : "text-slate-400 hover:text-slate-200"
+                        }`}
+                      >
+                        <Palette className="w-4 h-4 text-violet-500" />
+                        {v("workspace.design.title", ageGroup, ageLang)}
+                      </button>
+                    )}
                   </div>
 
                   {/* Display respective active component workspace */}
@@ -2034,6 +2051,8 @@ export default function App() {
                       unlockedClues={unlockedClues}
                       onSaveScreenplay={handleSaveScreenplay}
                       savedScreenplay={draftScreenplay}
+                      ageGroup={ageGroup}
+                      lang={ageLang}
                     />
                   )}
 
@@ -2096,7 +2115,7 @@ export default function App() {
                           onClick={() => handleSubmittingProject(activeWorkspaceSubTab === "guide" ? "screenplay" : activeWorkspaceSubTab)}
                           className="flex-1 py-2 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl shadow transition transform active:scale-95 text-center cursor-pointer"
                         >
-                          Soumettre mon Chef-d'Œuvre
+                          {v("submit.label", ageGroup, ageLang)}
                         </button>
                       </div>
                     </div>
