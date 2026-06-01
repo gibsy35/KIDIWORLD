@@ -8,6 +8,7 @@ import {
 
 interface FooterProps {
   language: "fr" | "en";
+  onNavigate?: (tab: string) => void;
 }
 
 const T = {
@@ -38,9 +39,9 @@ const T = {
         { label: "🎙️ Podcast" },
       ],
       legal: [
-        { label: "Mentions Légales", icon: FileText },
-        { label: "Politique de Confidentialité", icon: Lock },
-        { label: "CGU — Conditions d'Utilisation", icon: FileText },
+        { label: "Mentions Légales", icon: FileText, tab: "legal-notice" },
+        { label: "Politique de Confidentialité", icon: Lock, tab: "privacy" },
+        { label: "CGU — Conditions d'Utilisation", icon: FileText, tab: "cgu" },
         { label: "Protection des Mineurs (RGPD)", icon: Shield },
         { label: "Contrôle Parental", icon: Users },
         { label: "Charte de Modération", icon: BookOpen },
@@ -89,9 +90,9 @@ const T = {
         { label: "🎙️ Podcast" },
       ],
       legal: [
-        { label: "Legal Notice", icon: FileText },
-        { label: "Privacy Policy", icon: Lock },
-        { label: "Terms of Use", icon: FileText },
+        { label: "Legal Notice", icon: FileText, tab: "legal-notice" },
+        { label: "Privacy Policy", icon: Lock, tab: "privacy" },
+        { label: "Terms of Use", icon: FileText, tab: "cgu" },
         { label: "Child Protection (GDPR)", icon: Shield },
         { label: "Parental Control", icon: Users },
         { label: "Moderation Charter", icon: BookOpen },
@@ -213,7 +214,7 @@ function ContactForm({ language }: { language: "fr" | "en" }) {
 }
 
 // ─── Main Footer Component ──────────────────────────────────────────────────
-export default function Footer({ language }: FooterProps) {
+export default function Footer({ language, onNavigate }: FooterProps) {
   const t = T[language] || T.fr;
   const [legalExpanded, setLegalExpanded] = useState(false);
 
@@ -345,10 +346,13 @@ export default function Footer({ language }: FooterProps) {
               <ul className="space-y-2">
                 {t.links.legal.map((link) => (
                   <li key={link.label}>
-                    <a href="#" className="group flex items-center gap-2 text-[11px] text-slate-500 hover:text-indigo-400 transition-colors duration-200">
+                    <button
+                      onClick={() => (link as any).tab && onNavigate?.((link as any).tab)}
+                      className="group flex items-center gap-2 text-[11px] text-slate-500 hover:text-indigo-400 transition-colors duration-200 text-left w-full"
+                    >
                       <link.icon className="w-3 h-3 flex-shrink-0 opacity-50 group-hover:opacity-100" />
                       <span>{link.label}</span>
-                    </a>
+                    </button>
                   </li>
                 ))}
               </ul>

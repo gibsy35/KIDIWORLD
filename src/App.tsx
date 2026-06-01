@@ -17,6 +17,7 @@ import AboutUsSection from "./components/AboutUsSection";
 import Footer from "./components/Footer";
 import KidiStreamPlayer from "./components/KidiStreamPlayer";
 import TutorialModal from "./components/TutorialModal";
+import { CGUPage, PrivacyPage, LegalNoticePage } from "./components/LegalPages";
 import confetti from "canvas-confetti";
 import { Challenge, Submission, Clue, UserProfile } from "./types";
 import { t } from "./utils/i18n";
@@ -552,7 +553,7 @@ const INITIAL_LEADERBOARD = [
 
 export default function App() {
   const [role, setRole] = useState<"child" | "jury">("child");
-  const [activeTab, setActiveTab] = useState<"explorer" | "workspace" | "profile" | "kidi-games" | "kidi-music" | "kidi-stream" | "accounts" | "partners">("explorer");
+  const [activeTab, setActiveTab] = useState<"explorer" | "workspace" | "profile" | "kidi-games" | "kidi-music" | "kidi-stream" | "accounts" | "partners" | "about" | "cgu" | "privacy" | "legal-notice">("explorer");
   const [activeWorkspaceSubTab, setActiveWorkspaceSubTab] = useState<"guide" | "screenplay" | "music" | "costume">("guide");
 
   // Onboarding On-load Tutorial Modal State at Root level to bypass header rendering constraints
@@ -1204,6 +1205,28 @@ export default function App() {
 
               </div>
 
+              {/* ── Legal & Info ──────────────────────────── */}
+              <div className={`${isSidebarCollapsed ? "hidden" : "block"} pt-1`}>
+                <div className="px-2 pb-1">
+                  <span className="text-[8px] text-slate-700 uppercase tracking-widest font-mono font-bold">
+                    {profile.language === "fr" ? "Légal & Info" : "Legal & Info"}
+                  </span>
+                </div>
+                {[
+                  { id: "cgu", icon: "📋", labelFr: "CGU", labelEn: "Terms of Use" },
+                  { id: "privacy", icon: "🔒", labelFr: "Confidentialité", labelEn: "Privacy Policy" },
+                  { id: "legal-notice", icon: "⚖️", labelFr: "Mentions Légales", labelEn: "Legal Notice" },
+                ].map(item => (
+                  <button key={item.id} onClick={() => setActiveTab(item.id as any)}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-[10.5px] font-bold transition w-full text-left cursor-pointer ${
+                      activeTab === item.id ? "bg-slate-800 text-white" : "text-slate-600 hover:text-slate-400 hover:bg-slate-950/40"
+                    }`}>
+                    <span>{item.icon}</span>
+                    <span>{profile.language === "fr" ? item.labelFr : item.labelEn}</span>
+                  </button>
+                ))}
+              </div>
+
             </div>
 
             {/* Quick alert bar to show leftover screen-time limits dynamically */}
@@ -1797,6 +1820,24 @@ export default function App() {
             </div>
           )}
 
+          {activeTab === "cgu" && (
+            <div className="animate-fadeIn px-2 py-4">
+              <CGUPage lang={profile.language as "fr" | "en"} />
+            </div>
+          )}
+
+          {activeTab === "privacy" && (
+            <div className="animate-fadeIn px-2 py-4">
+              <PrivacyPage lang={profile.language as "fr" | "en"} />
+            </div>
+          )}
+
+          {activeTab === "legal-notice" && (
+            <div className="animate-fadeIn px-2 py-4">
+              <LegalNoticePage lang={profile.language as "fr" | "en"} />
+            </div>
+          )}
+
           {activeTab === "workspace" && (
             <div className="space-y-6">
               
@@ -2076,7 +2117,7 @@ export default function App() {
       ) : null}
 
       {/* Footer */}
-      <Footer language={profile.language} />
+      <Footer language={profile.language} onNavigate={(tab) => setActiveTab(tab as any)} />
 
       {/* Global Floating AI Coach — accessible depuis toute la plateforme */}
       <AICreativeCoach
